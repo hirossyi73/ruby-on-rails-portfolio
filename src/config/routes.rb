@@ -12,6 +12,6 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
   # Add a simple Todos index as the root page
-  resources :todos, only: [:index, :new, :create]
+  resources :todos, only: [ :index, :new, :create, :edit, :update ]
   root "todos#index"
 end

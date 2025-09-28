@@ -17,7 +17,22 @@ class TodosController < ApplicationController
     end
   end
 
-  private
+  def edit
+    @todo = Todo.find(params[:id])
+  end
+
+  def update
+    @todo = Todo.find(params[:id])
+    if @todo.update(todo_params)
+      redirect_to root_path, notice: "Todoを更新しました。"
+    else
+      flash.now[:alert] = "Todoの更新に失敗しました。"
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+
+  protected
 
   def todo_params
     params.require(:todo).permit(:title, :completed)
