@@ -1,0 +1,16 @@
+<h1>Todo一覧</h1>
+
+<% if @todos.any? %>
+<ul>
+    <% @todos.each do |todo| %>
+    <li>
+        <strong><%= todo.title %></strong>
+        <% if todo.completed %>
+        <em>(完了)</em>
+        <% end %>
+    </li>
+    <% end %>
+</ul>
+<% else %>
+<p>Todoはまだありません。</p>
+<% end %>
