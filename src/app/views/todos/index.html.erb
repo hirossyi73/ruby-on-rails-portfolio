@@ -11,6 +11,7 @@
         <em>(完了)</em>
         <% end %>
         <%= link_to '編集', edit_todo_path(todo) %>
+        <%= link_to '削除', todo_path(todo), method: :delete, data: { confirm: '本当に削除しますか？' } %>
     </li>
     <% end %>
 </ul>
