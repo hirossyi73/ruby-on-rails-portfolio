@@ -1,0 +1,16 @@
+<h1>Todo詳細</h1>
+
+<div>
+    タイトル：<%= @todo.title %>
+</div>
+
+<div>
+    完了済み：
+    <% if @todo.completed %>
+    ✅
+    <% else %>
+    ⬜
+    <% end %>
+</div>
+
+<%= link_to '戻る', root_path %>

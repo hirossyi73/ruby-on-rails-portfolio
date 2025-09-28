@@ -3,6 +3,10 @@ class TodosController < ApplicationController
     @todos = Todo.order(created_at: :desc)
   end
 
+  def show
+    @todo = Todo.find(params[:id])
+  end
+
   def new
     @todo = Todo.new
   end
