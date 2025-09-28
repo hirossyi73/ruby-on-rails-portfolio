@@ -13,7 +13,9 @@
 
 - Rails の`rails new`コマンドで Docker ファイルが上書きされない
 - プロジェクト全体の設定とアプリケーションコードが明確に分離される
-- チーム開発での役割分担が明確になる
+- チーム開発での役割分担が明確になる（インフラ担当 vs アプリ開発担当）
+- コンテナ内の作業ディレクトリ（/app）とローカルの開発ディレクトリ（src/）が1対1で対応
+- 依存関係管理がsrc/内のGemfileに集約される
 
 ## 必要な環境
 
@@ -35,35 +37,20 @@ cd RailsPractice
 docker compose build
 ```
 
-### 3. Rails アプリケーションの初期化（必要に応じて）
-
-既に src ディレクトリ内に Rails アプリケーションが作成済みです。
-新しい Rails アプリケーションを作成する場合：
-
-```bash
-# srcディレクトリを空にする
-rm -rf src/*
-
-# Railsアプリケーションを作成
-docker compose run --rm web rails new . --force --database=mysql --skip-bundle
-
-# 作成されたファイルをsrcディレクトリに移動
-mv app bin config config.ru db lib log public Rakefile storage test tmp vendor src/
-mv .gitattributes .rubocop.yml .ruby-version src/
-cp Gemfile Gemfile.lock src/
-```
-
-### 4. データベースの作成とマイグレーション
+### 3. データベースの作成とマイグレーション
 
 ```bash
 # データベースの作成
 docker compose run --rm web rails db:create
 
-# マイグレーションの実行（必要に応じて）
+# マイグレーションの実行
 docker compose run --rm web rails db:migrate
+
+# シードデータの投入（必要に応じて）
+docker compose run --rm web rails db:seed
 ```
 
-### 5. アプリケーションの起動
+### 4. アプリケーションの起動
 
 ```bash
 docker compose up
@@ -145,8 +132,6 @@ docker compose exec db mysql -u rails -p rails_practice_development
 ├── init-db.sql             # MySQLの初期化スクリプト
 ├── .dockerignore           # Dockerビルド時に除外するファイル
 ├── .gitignore              # プロジェクト全体のGitignore
-├── Gemfile                 # プロジェクト管理用のGemfile
-├── Gemfile.lock            # プロジェクト管理用のGemfile.lock
 └── src/                    # Railsアプリケーションのソースコード
     ├── app/                # Railsのアプリケーションコード
     ├── config/             # Rails設定ファイル
