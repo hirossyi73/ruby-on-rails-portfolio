@@ -19,6 +19,25 @@
 </head>
 
 <body>
+    <header>
+        <div class="header-content">
+            <h1><%= link_to 'Todo App', root_path %></h1>
+
+            <% if user_signed_in? %>
+            <div class="user-menu">
+                <span class="user-name">こんにちは、<%= current_user.name %>さん</span>
+                <%= link_to 'ログアウト', logout_path, 
+                   method: :delete, 
+                   class: 'logout-link',
+                   data: { 
+                     confirm: 'ログアウトしますか？',
+                     turbo_method: :delete 
+                   } %>
+            </div>
+            <% end %>
+        </div>
+    </header>
+
     <% flash.each do |key, message| %>
     <div class="flash <%= key %>"><%= message %></div>
     <% end %>

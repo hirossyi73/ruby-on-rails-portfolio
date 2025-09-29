@@ -9,9 +9,22 @@ Rails.application.routes.draw do
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
+  # ログイン関連のみ
+  get '/login', to: 'login#index'
+  post '/login', to: 'login#login'
+  delete '/logout', to: 'login#logout'
+  get '/logout', to: 'login#logout' # GETでもログアウト可能にする場合
+
   # Defines the root path route ("/")
   # root "posts#index"
   # Add a simple Todos resource with all standard RESTful routes
   resources :todos
+
+  # 未認証時のリダイレクト先
+  get '*path', to: redirect('/login'), constraints: lambda { |req|
+    !req.session[:user_id] && req.path != '/login'
+  }
+
+  # ルートのページ
   root "todos#index"
 end

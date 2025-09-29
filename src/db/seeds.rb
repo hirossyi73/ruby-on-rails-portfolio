@@ -14,3 +14,21 @@ todos.each do |attrs|
     t.completed = attrs[:completed]
   end
 end
+
+
+# Create test users
+User.find_or_create_by!(email: 'admin@example.com') do |user|
+  user.name = '管理者'
+  user.password = 'password123'
+  user.password_confirmation = 'password123'
+end
+
+User.find_or_create_by!(email: 'user@example.com') do |user|
+  user.name = '一般ユーザー'
+  user.password = 'password123'
+  user.password_confirmation = 'password123'
+end
+
+puts "テストユーザーを作成しました"
+puts "Email: admin@example.com, Password: password123"
+puts "Email: user@example.com, Password: password123"
