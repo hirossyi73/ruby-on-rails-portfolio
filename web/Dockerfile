@@ -21,7 +21,7 @@ COPY src/Gemfile src/Gemfile.lock ./
 RUN gem install bundler
 
 # Gemをインストール
-RUN bundle install
+RUN bundle install --verbose
 
 # アプリケーションのソースコードをコピー
 COPY src/ .
