@@ -18,17 +18,20 @@ vue-railsapi/
 ## 技術スタック
 
 ### フロントエンド
-- **Vue.js**: プログレッシブ JavaScript フレームワーク（TypeScript使用）
+
+- **Vue.js**: プログレッシブ JavaScript フレームワーク（TypeScript 使用）
 - **TypeScript**: 型安全性を提供する JavaScript の拡張言語
 - **Node.js**: JavaScript ランタイム環境
 - **npm**: パッケージ管理
 
 ### バックエンド
+
 - **Ruby on Rails**: API モード
 - **MySQL**: データベース
 - **Ruby 3.3**: プログラミング言語
 
 ### インフラ
+
 - **Docker**: コンテナ仮想化
 - **Docker Compose**: マルチコンテナアプリケーション管理
 
@@ -52,6 +55,7 @@ cp .env.example .env
 ```
 
 必要に応じて`.env`ファイルでポート番号を変更：
+
 ```bash
 # ポート設定例
 FRONTEND_PORT=3001
@@ -107,13 +111,14 @@ docker-compose exec frontend bash
 
 各サービスのポート番号は`.env`ファイルで設定できます：
 
-| サービス | 環境変数 | デフォルト値 | 説明 |
-|----------|----------|--------------|------|
-| フロントエンド | `FRONTEND_PORT` | 8080 | Vue.js開発サーバーのポート |
-| バックエンド | `BACKEND_PORT` | 3000 | Rails APIサーバーのポート |
-| データベース | `DATABASE_PORT` | 3306 | MySQLのポート |
+| サービス       | 環境変数        | デフォルト値 | 説明                        |
+| -------------- | --------------- | ------------ | --------------------------- |
+| フロントエンド | `FRONTEND_PORT` | 8080         | Vue.js 開発サーバーのポート |
+| バックエンド   | `BACKEND_PORT`  | 3000         | Rails API サーバーのポート  |
+| データベース   | `DATABASE_PORT` | 3306         | MySQL のポート              |
 
 例：ポート番号を変更する場合
+
 ```bash
 # .envファイル
 FRONTEND_PORT=3001
@@ -124,11 +129,13 @@ DATABASE_PORT=3307
 ## 開発ガイドライン
 
 ### API 開発（Rails）
+
 - RESTful API の設計原則に従う
 - CORS 設定でフロントエンドからのアクセスを許可
 - JSON 形式でのデータ交換
 
 ### フロントエンド開発（Vue.js + TypeScript）
+
 - コンポーネント指向の開発
 - TypeScript による型安全な開発
 - Axios 等を使用した API 通信
@@ -137,6 +144,7 @@ DATABASE_PORT=3307
 ## トラブルシューティング
 
 ### ポートが使用中の場合
+
 ```bash
 # 使用中のポートを確認
 lsof -i :3000
@@ -147,6 +155,7 @@ kill -9 <PID>
 ```
 
 ### データベース接続エラー
+
 ```bash
 # データベースコンテナの再起動
 docker-compose restart db
