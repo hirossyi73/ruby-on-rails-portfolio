@@ -33,6 +33,8 @@ services:
       DATABASE_PASSWORD: password
       DATABASE_NAME: vue_railsapi_development
       RAILS_ENV: development
+      # OAuthのリダイレクト先設定のために追加
+      FRONTEND_PORT: ${FRONTEND_PORT:-8080}
     stdin_open: true
     tty: true
     networks:

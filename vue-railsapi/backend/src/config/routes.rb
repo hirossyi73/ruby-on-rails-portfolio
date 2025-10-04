@@ -1,5 +1,21 @@
 Rails.application.routes.draw do
+  use_doorkeeper
+  devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+
+  # Authentication endpoints
+  namespace :auth do
+    get 'me', to: 'auth#me'
+    post 'revoke', to: 'auth#revoke'
+  end
+
+  # API endpoints (protected by OAuth2)
+  namespace :api do
+    namespace :v1 do
+      resources :todos
+      resources :users, only: [:show, :update]
+    end
+  end
 
   # Custom health check endpoint
   get "health" => "health#check"

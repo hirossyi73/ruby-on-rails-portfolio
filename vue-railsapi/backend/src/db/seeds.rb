@@ -2,6 +2,18 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
+# Create OAuth2 Application for Vue.js frontend
+oauth_app = Doorkeeper::Application.find_or_create_by!(name: "Vue.js Frontend") do |app|
+  app.redirect_uri = "http://localhost:#{ENV['FRONTEND_PORT'] || 8080}/callback"
+  app.scopes = "read write"
+  app.confidential = false # Public client for SPA
+end
+
+puts "OAuth2 Application created:"
+puts "Client ID: #{oauth_app.uid}"
+puts "Client Secret: #{oauth_app.secret}"
+puts "Redirect URI: #{oauth_app.redirect_uri}"
+
 # Create some sample todos for development
 todos = [
   { title: "開発環境のセットアップ", completed: true },
