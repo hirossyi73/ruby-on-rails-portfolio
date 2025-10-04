@@ -121,9 +121,9 @@ docker-compose exec frontend bash
 
 ```bash
 # .envファイル
-FRONTEND_PORT=3001
-BACKEND_PORT=3002
-DATABASE_PORT=3307
+FRONTEND_PORT=23000
+BACKEND_PORT=23001
+DATABASE_PORT=23306
 ```
 
 ## 開発ガイドライン

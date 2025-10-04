@@ -56,7 +56,8 @@ services:
       - backend
     environment:
       NODE_ENV: development
-      NUXT_PUBLIC_API_BASE_URL: http://backend:3001
+      NUXT_PUBLIC_API_BASE_URL: http://localhost:${BACKEND_PORT:-53000}
+      NUXT_API_BASE_URL: "${NUXT_API_BASE_URL:-http://backend:3000}"
     stdin_open: true
     tty: true
     networks:
