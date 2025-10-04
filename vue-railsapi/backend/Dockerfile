@@ -30,4 +30,6 @@ COPY src/ .
 EXPOSE 3000
 
 # Railsサーバーを起動（APIモード）
-CMD ["rails", "server", "-b", "0.0.0.0"]
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
