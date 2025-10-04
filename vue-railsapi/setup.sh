@@ -6,11 +6,11 @@ echo "Vue + Rails API プロジェクトの初期化を開始します..."
 
 # Rails API アプリケーションの生成
 echo "Rails API アプリケーションを生成しています..."
-docker-compose run --rm backend bash -c "cd /tmp && rails new . --api --database=mysql --skip-git && cp -r . /app/"
+docker-compose run --rm backend bash -c "rails new /app --api --database=mysql --skip-git --force"
 
 # Vue.js アプリケーションの生成
 echo "Vue.js アプリケーションを生成しています..."
-docker-compose run --rm frontend bash -c "cd /tmp && vue create . --default && cp -r . /app/"
+docker-compose run --rm frontend bash -c "vue create /app --default --force"
 
 # データベースのセットアップ
 echo "データベースをセットアップしています..."
