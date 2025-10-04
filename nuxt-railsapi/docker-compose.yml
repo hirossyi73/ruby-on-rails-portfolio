@@ -5,7 +5,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: vue_railsapi_development
+      MYSQL_DATABASE: nuxt_railsapi_development
       MYSQL_USER: rails
       MYSQL_PASSWORD: password
     volumes:
@@ -31,7 +31,7 @@ services:
       DATABASE_HOST: db
       DATABASE_USERNAME: rails
       DATABASE_PASSWORD: password
-      DATABASE_NAME: vue_railsapi_development
+      DATABASE_NAME: nuxt_railsapi_development
       RAILS_ENV: development
       # OAuthのリダイレクト先設定のために追加
       FRONTEND_PORT: ${FRONTEND_PORT:-8080}

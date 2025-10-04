@@ -1,3 +1,3 @@
-# Rails & Vue ポートフォリオ用プロジェクト
+# Rails & Vue(Nuxt) ポートフォリオ用プロジェクト
 
-Rails と、Vue の勉強用のプロジェクトです。
+Rails と、Vue(Nuxt) の勉強用のプロジェクトです。
