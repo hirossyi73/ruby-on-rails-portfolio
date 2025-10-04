@@ -1,15 +1,15 @@
-# Vue + Rails API プロジェクト
+# Nuxt + Rails API プロジェクト
 
-Vue.js（フロントエンド）と Ruby on Rails API（バックエンド）を Docker で構築したフルスタック Web アプリケーションです。
+Nuxt.js（フロントエンド）と Ruby on Rails API（バックエンド）を Docker で構築したフルスタック Web アプリケーションです。
 
 ## プロジェクト構成
 
 ```
 nuxt-railsapi/
 ├── docker-compose.yml          # Docker Compose 設定
-├── frontend/                   # Vue.js フロントエンド
+├── frontend/                   # Nuxt.js フロントエンド
 │   ├── Dockerfile
-│   └── src/                   # Vue.js アプリケーションコード
+│   └── src/                   # Nuxt.js アプリケーションコード
 └── backend/                   # Rails API バックエンド
     ├── Dockerfile
     └── src/                   # Rails API アプリケーションコード
@@ -19,7 +19,7 @@ nuxt-railsapi/
 
 ### フロントエンド
 
-- **Vue.js**: プログレッシブ JavaScript フレームワーク（TypeScript 使用）
+- **Nuxt.js**: Vue.js ベースのフルスタックフレームワーク（TypeScript 使用）
 - **TypeScript**: 型安全性を提供する JavaScript の拡張言語
 - **Node.js**: JavaScript ランタイム環境
 - **npm**: パッケージ管理
@@ -75,8 +75,8 @@ docker-compose up -d --build
 
 ### 4. アクセス確認
 
-- **フロントエンド（Vue.js）**: http://localhost:8080 (デフォルト)
-- **バックエンド（Rails API）**: http://localhost:3000 (デフォルト)
+- **フロントエンド（Nuxt.js）**: http://localhost:3000 (デフォルト)
+- **バックエンド（Rails API）**: http://localhost:3001 (デフォルト)
 - **MySQL**: localhost:3306 (デフォルト)
 
 ※ポート番号は`.env`ファイルで変更可能です
@@ -111,11 +111,11 @@ docker-compose exec frontend bash
 
 各サービスのポート番号は`.env`ファイルで設定できます：
 
-| サービス       | 環境変数        | デフォルト値 | 説明                        |
-| -------------- | --------------- | ------------ | --------------------------- |
-| フロントエンド | `FRONTEND_PORT` | 8080         | Vue.js 開発サーバーのポート |
-| バックエンド   | `BACKEND_PORT`  | 3000         | Rails API サーバーのポート  |
-| データベース   | `DATABASE_PORT` | 3306         | MySQL のポート              |
+| サービス       | 環境変数        | デフォルト値 | 説明                         |
+| -------------- | --------------- | ------------ | ---------------------------- |
+| フロントエンド | `FRONTEND_PORT` | 3000         | Nuxt.js 開発サーバーのポート |
+| バックエンド   | `BACKEND_PORT`  | 3001         | Rails API サーバーのポート   |
+| データベース   | `DATABASE_PORT` | 3306         | MySQL のポート               |
 
 例：ポート番号を変更する場合
 
@@ -134,12 +134,13 @@ DATABASE_PORT=3307
 - CORS 設定でフロントエンドからのアクセスを許可
 - JSON 形式でのデータ交換
 
-### フロントエンド開発（Vue.js + TypeScript）
+### フロントエンド開発（Nuxt.js + TypeScript）
 
 - コンポーネント指向の開発
 - TypeScript による型安全な開発
 - Axios 等を使用した API 通信
 - レスポンシブデザインの実装
+- SSR（Server-Side Rendering）対応
 
 ## トラブルシューティング
 

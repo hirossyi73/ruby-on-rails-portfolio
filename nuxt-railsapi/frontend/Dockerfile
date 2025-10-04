@@ -10,14 +10,14 @@ COPY src/package*.json ./
 # npm依存関係をインストール
 RUN npm install
 
-# Vue CLIをグローバルインストール
-RUN npm install -g @vue/cli
+# Nuxtをグローバルインストール
+RUN npm install -g nuxt@latest
 
 # アプリケーションのソースコードをコピー
 COPY src/ .
 
-# ポート8080を公開
-EXPOSE 8080
+# ポート3000を公開
+EXPOSE 3000
 
-# Vue.js開発サーバーを起動
-CMD ["npm", "run", "serve"]
+# Nuxt.js開発サーバーを起動
+CMD ["npm", "run", "dev"]

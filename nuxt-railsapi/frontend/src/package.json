@@ -3,32 +3,28 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "serve": "nuxt-cli-service serve --host 0.0.0.0",
-    "build": "nuxt-cli-service build",
-    "lint": "nuxt-cli-service lint",
-    "type-check": "nuxt-tsc --noEmit"
+    "dev": "nuxt dev --host 0.0.0.0",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "lint": "eslint .",
+    "type-check": "nuxt typecheck"
   },
   "dependencies": {
-    "core-js": "^3.8.3",
-    "vue": "^3.2.13",
-    "nuxt-router": "^4.0.3",
-    "vuex": "^4.0.0",
+    "nuxt": "^3.8.0",
+    "@nuxt/typescript-build": "^3.0.0",
+    "@pinia/nuxt": "^0.5.1",
+    "pinia": "^2.1.7",
     "axios": "^1.4.0"
   },
   "devDependencies": {
+    "@nuxt/devtools": "latest",
+    "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@types/node": "^18.15.0",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "@typescript-eslint/parser": "^5.54.0",
-    "@vue/cli-plugin-eslint": "~5.0.0",
-    "@vue/cli-plugin-router": "~5.0.0",
-    "@vue/cli-plugin-typescript": "~5.0.0",
-    "@vue/cli-plugin-vuex": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
-    "@vue/eslint-config-typescript": "^11.0.0",
     "eslint": "^8.35.0",
-    "eslint-plugin-vue": "^9.9.0",
-    "typescript": "~4.9.5",
-    "nuxt-tsc": "^1.2.0"
+    "typescript": "~4.9.5"
   },
   "eslintConfig": {
     "root": true,
@@ -36,9 +32,7 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/vue3-essential",
-      "eslint:recommended",
-      "@vue/typescript/recommended"
+      "@nuxtjs/eslint-config-typescript"
     ],
     "parserOptions": {
       "ecmaVersion": 2020

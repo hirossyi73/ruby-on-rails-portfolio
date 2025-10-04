@@ -10,6 +10,7 @@ services:
       MYSQL_PASSWORD: password
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     ports:
       - "${DATABASE_PORT:-3306}:3306"
     networks:
@@ -32,15 +33,16 @@ services:
       DATABASE_USERNAME: rails
       DATABASE_PASSWORD: password
       DATABASE_NAME: nuxt_railsapi_development
+      DATABASE_TEST_NAME: nuxt_railsapi_test
       RAILS_ENV: development
       # OAuthのリダイレクト先設定のために追加
-      FRONTEND_PORT: ${FRONTEND_PORT:-8080}
+      FRONTEND_PORT: ${FRONTEND_PORT:-3000}
     stdin_open: true
     tty: true
     networks:
       - nuxt-railsapi-network
 
-  # Vue.js フロントエンド
+  # Nuxt.js フロントエンド
   frontend:
     build:
       context: ./frontend
@@ -49,12 +51,12 @@ services:
       - ./frontend/src:/app
       - node_modules:/app/node_modules
     ports:
-      - "${FRONTEND_PORT:-8080}:8080"
+      - "${FRONTEND_PORT:-3000}:3000"
     depends_on:
       - backend
     environment:
       NODE_ENV: development
-      VUE_APP_API_BASE_URL: http://backend:3000
+      NUXT_PUBLIC_API_BASE_URL: http://backend:3001
     stdin_open: true
     tty: true
     networks:

@@ -17,5 +17,7 @@ fi
 echo "[entrypoint] bundle: $(bundle -v)"
 echo "[entrypoint] rails : $(bin/rails -v)"
 
+bundle exec rails db:create && bundle exec rails db:migrate
+
 rm -f tmp/pids/server.pid
 exec bin/rails server -b 0.0.0.0 -p 3000

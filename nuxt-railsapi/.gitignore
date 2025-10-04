@@ -54,6 +54,9 @@ backend/src/log/
 backend/src/storage/
 backend/src/.byebug_history
 
-# Vue.js specific
+# Nuxt.js specific
 frontend/src/.env.local
 frontend/src/.env.*.local
+frontend/src/.nuxt/
+frontend/src/.output/
+frontend/src/dist/
