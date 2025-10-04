@@ -14,6 +14,10 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :todos
       resources :users, only: [:show, :update]
+      
+      # API認証エンドポイント
+      post 'auth/login', to: 'sessions#create'
+      post 'auth/register', to: 'sessions#register'
     end
   end
 
