@@ -13,7 +13,7 @@ services:
     ports:
       - "${DATABASE_PORT:-3306}:3306"
     networks:
-      - vue-railsapi-network
+      - nuxt-railsapi-network
 
   # Rails API バックエンド
   backend:
@@ -38,7 +38,7 @@ services:
     stdin_open: true
     tty: true
     networks:
-      - vue-railsapi-network
+      - nuxt-railsapi-network
 
   # Vue.js フロントエンド
   frontend:
@@ -58,7 +58,7 @@ services:
     stdin_open: true
     tty: true
     networks:
-      - vue-railsapi-network
+      - nuxt-railsapi-network
 
 volumes:
   mysql_data:
@@ -66,5 +66,5 @@ volumes:
   node_modules:
 
 networks:
-  vue-railsapi-network:
+  nuxt-railsapi-network:
     driver: bridge

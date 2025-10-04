@@ -5,7 +5,7 @@ Vue.js（フロントエンド）と Ruby on Rails API（バックエンド）�
 ## プロジェクト構成
 
 ```
-vue-railsapi/
+nuxt-railsapi/
 ├── docker-compose.yml          # Docker Compose 設定
 ├── frontend/                   # Vue.js フロントエンド
 │   ├── Dockerfile
@@ -45,7 +45,7 @@ vue-railsapi/
 ### 1. プロジェクトディレクトリに移動
 
 ```bash
-cd vue-railsapi
+cd nuxt-railsapi
 ```
 
 ### 2. 環境変数設定
