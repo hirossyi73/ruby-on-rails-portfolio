@@ -24,9 +24,9 @@
         >
           <div class="todo-content">
             <h3 class="todo-title">{{ todo.title }}</h3>
-            <p v-if="todo.description" class="todo-description">
+            <!-- <p v-if="todo.description" class="todo-description">
               {{ todo.description }}
-            </p>
+            </p> -->
             <div class="todo-meta">
               <span class="todo-status" :class="todo.completed ? 'status-completed' : 'status-pending'">
                 {{ todo.completed ? '完了' : '未完了' }}
@@ -38,9 +38,36 @@
       </div>
       
       <div class="todo-stats">
-        <p>総数: {{ todos.length }}件</p>
+        <p>総数: {{ totalCount }}件</p>
+        <p>現在のページ: {{ todos.length }}件</p>
         <p>完了: {{ completedCount }}件</p>
         <p>未完了: {{ pendingCount }}件</p>
+        <p v-if="pagination">
+          ページ {{ pagination.current_page }} / {{ pagination.total_pages }}
+        </p>
+      </div>
+      
+      <!-- ページネーション -->
+      <div v-if="pagination && pagination.total_pages > 1" class="pagination">
+        <button 
+          @click="goToPrevPage" 
+          :disabled="!pagination.has_prev_page"
+          class="pagination-btn"
+        >
+          ← 前のページ
+        </button>
+        
+        <span class="pagination-info">
+          {{ pagination.current_page }} / {{ pagination.total_pages }}
+        </span>
+        
+        <button 
+          @click="goToNextPage" 
+          :disabled="!pagination.has_next_page"
+          class="pagination-btn"
+        >
+          次のページ →
+        </button>
       </div>
     </div>
     
@@ -53,23 +80,22 @@
 </template>
 
 <script setup lang="ts">
-// 型定義
-interface Todo {
-  id: number
-  title: string
-  description?: string
-  completed: boolean
-  created_at: string
-  updated_at: string
-}
+import type { Todo, TodosResponse, Pagination, TodoFilters } from '~/types'
 
 // リアクティブデータ
 const todos = ref<Todo[]>([])
+const pagination = ref<Pagination | null>(null)
 const pending = ref(false)
 const error = ref<string | null>(null)
 
-// API クライアントを取得
-const api = useApi()
+// フィルター設定
+const filters = ref<TodoFilters>({
+  page: 1,
+  per_page: 20
+})
+
+// TODOコンポーザブルを取得
+const todoComposable = useTodos()
 
 // TODOを取得する関数
 const fetchTodos = async () => {
@@ -77,8 +103,9 @@ const fetchTodos = async () => {
   error.value = null
   
   try {
-    const response = await api.get('/api/v1/todos')
-    todos.value = response
+    const response: TodosResponse = await todoComposable.fetchTodos(filters.value)
+    todos.value = response.todos
+    pagination.value = response.pagination
   } catch (err) {
     console.error('TODOの取得に失敗しました:', err)
     error.value = 'TODOの取得に失敗しました'
@@ -92,6 +119,26 @@ const refreshTodos = () => {
   fetchTodos()
 }
 
+// ページ変更
+const changePage = (page: number) => {
+  filters.value.page = page
+  fetchTodos()
+}
+
+// 次のページ
+const goToNextPage = () => {
+  if (pagination.value?.has_next_page) {
+    changePage(filters.value.page! + 1)
+  }
+}
+
+// 前のページ
+const goToPrevPage = () => {
+  if (pagination.value?.has_prev_page) {
+    changePage(filters.value.page! - 1)
+  }
+}
+
 // 計算プロパティ
 const completedCount = computed(() => 
   todos.value.filter(todo => todo.completed).length
@@ -99,6 +146,11 @@ const completedCount = computed(() =>
 
 const pendingCount = computed(() => 
   todos.value.filter(todo => !todo.completed).length
+)
+
+// 総数（ページネーション情報から取得）
+const totalCount = computed(() => 
+  pagination.value?.total_count || todos.value.length
 )
 
 // ページ読み込み時にTODOを取得
@@ -239,6 +291,45 @@ h1 {
   background-color: #45a049;
 }
 
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.pagination-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.pagination-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.pagination-info {
+  font-weight: bold;
+  color: #333;
+  min-width: 100px;
+  text-align: center;
+}
+
 @media (max-width: 768px) {
   .todo-container {
     padding: 1rem;
@@ -248,6 +339,15 @@ h1 {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+  }
+  
+  .pagination {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .pagination-btn {
+    width: 100%;
   }
 }
 </style>
