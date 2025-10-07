@@ -122,7 +122,7 @@
             class="min-w-[200px]"
             @click="openGithub"
           >
-            <el-icon><Link /></el-icon>
+            <el-icon><Link  /></el-icon>
             GitHub
           </el-button>
         </div>
@@ -322,7 +322,7 @@ const navigateToTodos = () => {
 }
 
 const openGithub = () => {
-  window.open('https://github.com', '_blank')
+  window.open('https://github.com/hirossyi73/ruby-on-rails-portfolio', '_blank')
 }
 
 // ページロード時にAPI状態を確認
