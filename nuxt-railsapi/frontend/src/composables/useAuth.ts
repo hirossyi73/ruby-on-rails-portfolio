@@ -17,14 +17,14 @@ export const useAuth = () => {
     maxAge: 60 * 60 * 24 * 7, // 7日間
     sameSite: 'lax' as const,
     secure: process.env.NODE_ENV === 'production',
-    path: '/'
+    path: '/',
   }
 
   // アクセストークン（Cookie）
   const accessToken = useCookie('access_token', cookieOptions)
   const refreshToken = useCookie('refresh_token', {
     ...cookieOptions,
-    maxAge: 60 * 60 * 24 * 30 // 30日間
+    maxAge: 60 * 60 * 24 * 30, // 30日間
   })
   const userCookie = useCookie<User | null>('user', cookieOptions)
 
@@ -45,13 +45,13 @@ export const useAuth = () => {
     const api = useApi()
 
     try {
-      const data = await api.post('/oauth/token', {
+      const data = (await api.post('/oauth/token', {
         grant_type: 'password',
         username: email,
         password,
         client_id: config.public.oauthClientId,
-        client_secret: config.public.oauthClientSecret
-      }) as {
+        client_secret: config.public.oauthClientSecret,
+      })) as {
         access_token: string
         refresh_token?: string
         user?: User
@@ -93,12 +93,12 @@ export const useAuth = () => {
     const api = useApi()
 
     try {
-      const data = await api.post('/oauth/token', {
+      const data = (await api.post('/oauth/token', {
         grant_type: 'refresh_token',
         refresh_token: refreshToken.value,
         client_id: config.public.oauthClientId,
-        client_secret: config.public.oauthClientSecret
-      }) as {
+        client_secret: config.public.oauthClientSecret,
+      })) as {
         access_token: string
         refresh_token?: string
       }
@@ -128,9 +128,18 @@ export const useAuth = () => {
     if (process.server) {
       try {
         const headers = useRequestHeaders(['cookie'])
-        const result = await $fetch<{ authenticated: boolean } | null>('/api/auth/me', {
-          headers
+        const result = await $fetch<{
+          authenticated: boolean
+          user?: User
+        } | null>('/api/auth/me', {
+          headers,
         })
+
+        // ユーザー情報をCookieに保存
+        if (result?.user) {
+          userCookie.value = result.user
+        }
+
         return result?.authenticated ?? false
       } catch {
         return false
@@ -151,6 +160,6 @@ export const useAuth = () => {
     login,
     logout,
     refresh,
-    checkAuth
+    checkAuth,
   }
 }
