@@ -9,7 +9,8 @@
           <NuxtLink to="/" class="nav-link">
             ホーム
           </NuxtLink>
-          <NuxtLink to="/todos" class="nav-link">
+
+          <NuxtLink v-if="authStore.isLoggedIn"  to="/todos" class="nav-link">
             TODO一覧
           </NuxtLink>
           <span v-if="authStore.isLoggedIn" class="nav-user">
@@ -130,7 +131,7 @@ const handleLogout = async () => {
 }
 
 main {
-  min-height: calc(100vh - 120px);
+  min-height: calc(100vh - 135px);
   padding: 2rem;
 }
 

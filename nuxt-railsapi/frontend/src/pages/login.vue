@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center px-4">
+  <div class="login-container flex items-center justify-center px-4">
     <el-card class="w-full max-w-md" shadow="always">
       <template #header>
         <div class="flex items-center justify-center">
@@ -19,6 +19,11 @@
         label-position="top"
         @submit.prevent="handleLogin"
       >
+      <div class="mb-2 text-center">
+        メールアドレス：admin@example.com<br />
+        パスワード：password123
+      </div>
+
         <el-form-item label="メールアドレス" prop="email">
           <el-input
             v-model="loginForm.email"
