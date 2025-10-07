@@ -6,8 +6,21 @@
           <h1>Nuxt + Rails API</h1>
         </div>
         <div class="navbar-menu">
-          <NuxtLink to="/" class="nav-link">ホーム</NuxtLink>
-          <NuxtLink to="/todos" class="nav-link">TODO一覧</NuxtLink>
+          <NuxtLink to="/" class="nav-link">
+            ホーム
+          </NuxtLink>
+          <NuxtLink to="/todos" class="nav-link">
+            TODO一覧
+          </NuxtLink>
+          <span v-if="authStore.isLoggedIn" class="nav-user">
+            {{ authStore.user?.email || 'ユーザー' }}
+          </span>
+          <button v-if="authStore.isLoggedIn" class="nav-button" @click="handleLogout">
+            ログアウト
+          </button>
+          <NuxtLink v-else to="/login" class="nav-link">
+            ログイン
+          </NuxtLink>
         </div>
       </nav>
     </header>
@@ -23,7 +36,38 @@
 </template>
 
 <script setup lang="ts">
-// レイアウト用のロジックがあればここに記述
+import { ElMessage, ElMessageBox } from 'element-plus'
+
+const authStore = useAuthStore()
+const router = useRouter()
+
+// クライアントサイドで認証状態を復元
+onMounted(() => {
+  if (process.client && !authStore.isAuthenticated) {
+    authStore.restoreAuth()
+  }
+})
+
+// ログアウト処理
+const handleLogout = async () => {
+  try {
+    await ElMessageBox.confirm(
+      'ログアウトしますか？',
+      '確認',
+      {
+        confirmButtonText: 'ログアウト',
+        cancelButtonText: 'キャンセル',
+        type: 'warning'
+      }
+    )
+
+    authStore.logout()
+    ElMessage.success('ログアウトしました')
+    await router.push('/login')
+  } catch {
+    // キャンセル時は何もしない
+  }
+}
 </script>
 
 <style scoped>
@@ -61,6 +105,28 @@
 .nav-link.router-link-active {
   background-color: rgba(255, 255, 255, 0.2);
   font-weight: bold;
+}
+
+.nav-user {
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.nav-button {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 0.9rem;
+}
+
+.nav-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 main {

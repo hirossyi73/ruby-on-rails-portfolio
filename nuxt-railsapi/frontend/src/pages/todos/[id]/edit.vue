@@ -73,6 +73,11 @@ import {
 } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
+// 認証ミドルウェアを適用
+definePageMeta({
+  middleware: 'auth'
+})
+
 // 型定義
 interface Todo {
   id: number

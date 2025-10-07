@@ -9,6 +9,14 @@ export const useApi = () => {
       ? config.apiBaseUrl
       : config.public.apiBaseUrl
 
+    // 認証トークンを取得
+    let authToken = options.token // 直接指定されたトークン
+    if (!authToken && process.client) {
+      // ストアからトークンを取得
+      const authStore = useAuthStore()
+      authToken = authStore.getAccessToken
+    }
+
     // URLパラメータを構築
     let url = `${baseUrl}${endpoint}`
     if (options.params) {
@@ -23,24 +31,31 @@ export const useApi = () => {
       }
     }
 
+    // ヘッダーを構築
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      ...options.headers
+    }
+
+    // 認証トークンがあればAuthorizationヘッダーに追加
+    if (authToken) {
+      headers.Authorization = `Bearer ${authToken}`
+    }
+
     return await $fetch(url, {
       ...options,
-      // CORSヘッダーを追加
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
+      headers
     })
   }
 
   return {
-    get: (endpoint: string, params?: Record<string, any>) => 
+    get: (endpoint: string, params?: Record<string, any>) =>
       apiRequest(endpoint, { method: 'GET', params }),
     post: (endpoint: string, body: any) =>
       apiRequest(endpoint, { method: 'POST', body }),
     put: (endpoint: string, body: any) =>
       apiRequest(endpoint, { method: 'PUT', body }),
-    delete: (endpoint: string) => 
+    delete: (endpoint: string) =>
       apiRequest(endpoint, { method: 'DELETE' })
   }
 }

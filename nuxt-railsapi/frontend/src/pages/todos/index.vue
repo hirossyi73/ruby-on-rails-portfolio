@@ -308,6 +308,11 @@ useHead({
   ]
 })
 
+// 認証ミドルウェアを適用
+definePageMeta({
+  middleware: 'auth'
+})
+
 // リアクティブデータ
 const todos = ref<Todo[]>([])
 const pagination = ref<Pagination | null>(null)

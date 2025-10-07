@@ -70,6 +70,11 @@ useHead({
   ]
 })
 
+// 認証ミドルウェアを適用
+definePageMeta({
+  middleware: 'auth'
+})
+
 // 送信状態
 const isSubmitting = ref(false)
 
