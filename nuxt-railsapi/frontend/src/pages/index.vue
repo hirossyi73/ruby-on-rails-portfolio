@@ -122,7 +122,7 @@
             class="min-w-[200px]"
             @click="openGithub"
           >
-            <el-icon><Link  /></el-icon>
+            <el-icon><Link /></el-icon>
             GitHub
           </el-button>
         </div>
@@ -170,7 +170,6 @@ import {
   Connection,
   Star,
   Document,
-  View,
   Link,
   Platform,
   Lightning,
@@ -329,9 +328,9 @@ const openGithub = () => {
 onMounted(async () => {
   // eslint-disable-next-line no-console
   console.log('Indexページが読み込まれました')
-  
+
   const { hideLoading } = useLoading()
-  
+
   try {
     await checkApiStatus()
   } finally {
