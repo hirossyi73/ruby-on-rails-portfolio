@@ -9,10 +9,24 @@ export default defineNuxtConfig({
   // },
 
   // CSS設定
-  css: [],
+  css: ['~/assets/css/main.css'],
 
   // モジュール設定
-  modules: ['@pinia/nuxt'],
+  modules: ['@pinia/nuxt', '@element-plus/nuxt', '@nuxtjs/tailwindcss'],
+
+  // Element Plus設定
+  elementPlus: {
+    /** Options */
+    themes: ['dark'],
+  },
+
+  // Tailwind CSS設定
+  tailwindcss: {
+    cssPath: '~/assets/css/main.css',
+    configPath: 'tailwind.config.js',
+    exposeConfig: false,
+    viewer: true,
+  },
 
   // ランタイム設定
   runtimeConfig: {
