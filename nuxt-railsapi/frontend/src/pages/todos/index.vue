@@ -145,7 +145,7 @@
           <p class="text-gray-500">
             新しいTODOを作成してください
           </p>
-          <el-button type="primary" class="mt-4">
+          <el-button type="primary" class="mt-4" @click="createTodo">
             <el-icon><Plus /></el-icon>
             TODO作成
           </el-button>
@@ -389,7 +389,7 @@ const toggleTodoStatus = async (todo: Todo) => {
 
 // TODO編集
 const editTodo = (todo: Todo) => {
-  ElMessage.info(`TODO「${todo.title}」の編集機能は未実装です`)
+  navigateTo(`/todos/${todo.id}/edit`)
 }
 
 // TODO削除
@@ -421,7 +421,7 @@ const deleteTodo = async (todo: Todo) => {
 
 // TODO作成
 const createTodo = () => {
-  ElMessage.info('TODO作成機能は未実装です')
+  navigateTo('/todos/create')
 }
 
 // 計算プロパティ

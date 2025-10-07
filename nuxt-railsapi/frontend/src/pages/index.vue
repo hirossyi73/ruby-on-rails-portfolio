@@ -321,10 +321,6 @@ const navigateToTodos = () => {
   navigateTo('/todos')
 }
 
-const navigateToDemo = () => {
-  navigateTo('/demo')
-}
-
 const openGithub = () => {
   window.open('https://github.com', '_blank')
 }

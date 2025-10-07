@@ -3,7 +3,7 @@
 export interface Todo {
   id: number
   title: string
-  //description?: string
+  description?: string
   completed: boolean
   created_at: string
   updated_at: string
@@ -32,13 +32,13 @@ export interface PaginationParams {
 // TODO作成・更新用の型
 export interface CreateTodoRequest {
   title: string
-  //description?: string
+  description?: string
   completed?: boolean
 }
 
 export interface UpdateTodoRequest {
   title?: string
-  //description?: string
+  description?: string
   completed?: boolean
 }
 
