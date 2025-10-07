@@ -1,5 +1,5 @@
-# Node.js 18を使用
-FROM node:18
+# Node.js 20を使用（Nuxt 3と互換性が良い）
+FROM node:20-alpine
 
 # 作業ディレクトリを設定
 WORKDIR /app
@@ -10,8 +10,8 @@ COPY src/package*.json ./
 # npm依存関係をインストール
 RUN npm install
 
-# Nuxtをグローバルインストール
-RUN npm install -g nuxt@latest
+# Nuxtをグローバルインストール（不要なので削除）
+# RUN npm install -g nuxt@latest
 
 # アプリケーションのソースコードをコピー
 COPY src/ .
