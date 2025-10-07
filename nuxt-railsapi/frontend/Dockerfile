@@ -1,5 +1,5 @@
-# Node.js 20を使用（Nuxt 3と互換性が良い）
-FROM node:20-alpine
+# Node.js 20を使用（標準版でネイティブバインディング対応）
+FROM node:20
 
 # 作業ディレクトリを設定
 WORKDIR /app
