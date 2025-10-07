@@ -102,14 +102,14 @@
 
             <div class="flex items-center space-x-4">
               <!-- フィルター機能 -->
-              <el-select v-model="filters.status" placeholder="ステータス" size="small" class="w-32">
+              <el-select v-model="filters.status" placeholder="ステータス" size="small" class="!w-32">
                 <el-option label="すべて" value="all" />
                 <el-option label="完了" value="completed" />
                 <el-option label="未完了" value="pending" />
               </el-select>
 
               <!-- ページサイズ選択 -->
-              <el-select v-model="filters.per_page" size="small" class="w-24">
+              <el-select v-model="filters.per_page" size="small" class="!w-24">
                 <el-option label="10" :value="10" />
                 <el-option label="20" :value="20" />
                 <el-option label="50" :value="50" />
