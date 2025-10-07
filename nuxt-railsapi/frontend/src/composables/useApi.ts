@@ -12,9 +12,9 @@ export const useApi = () => {
     // 認証トークンを取得
     let authToken = options.token // 直接指定されたトークン
     if (!authToken && process.client) {
-      // ストアからトークンを取得
-      const authStore = useAuthStore()
-      authToken = authStore.getAccessToken
+      // useAuth からトークンを取得
+      const { accessToken } = useAuth()
+      authToken = accessToken.value
     }
 
     // URLパラメータを構築

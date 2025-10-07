@@ -19,10 +19,10 @@
         label-position="top"
         @submit.prevent="handleLogin"
       >
-      <div class="mb-2 text-center">
-        メールアドレス：admin@example.com<br />
-        パスワード：password123
-      </div>
+        <div class="mb-2 text-center">
+          メールアドレス：admin@example.com<br>
+          パスワード：password123
+        </div>
 
         <el-form-item label="メールアドレス" prop="email">
           <el-input
@@ -89,11 +89,9 @@ useHead({
   ]
 })
 
-// ストアとAPI
-const authStore = useAuthStore()
-const api = useApi()
+// useAuth composable を使用
+const { login } = useAuth()
 const router = useRouter()
-const config = useRuntimeConfig()
 
 // フォームデータ
 const loginFormRef = ref<FormInstance>()
@@ -116,7 +114,7 @@ const rules: FormRules = {
   ]
 }
 
-// 通常のログイン処理
+// ログイン処理
 const handleLogin = async () => {
   if (!loginFormRef.value) { return }
 
@@ -126,30 +124,15 @@ const handleLogin = async () => {
     loading.value = true
 
     try {
-      // OAuthトークンエンドポイントを呼び出し
-      const data = await api.post('/oauth/token', {
-        grant_type: 'password',
-        username: loginForm.email,
-        password: loginForm.password,
-        client_id: config.public.oauthClientId,
-        client_secret: config.public.oauthClientSecret
-      }) as {
-        access_token: string
-        refresh_token?: string
-        user?: { id: number; email: string; name?: string }
+      // useAuth の login メソッドを使用
+      const result = await login(loginForm.email, loginForm.password)
+
+      if (result.success) {
+        ElMessage.success('ログインに成功しました')
+        await router.push('/todos')
+      } else {
+        ElMessage.error('ログインに失敗しました。メールアドレスとパスワードを確認してください。')
       }
-
-      // 認証情報を保存
-      authStore.setAuth(
-        data.access_token,
-        data.refresh_token,
-        data.user
-      )
-
-      ElMessage.success('ログインに成功しました')
-
-      // TODOページへリダイレクト
-      await router.push('/todos')
     } catch (error) {
       ElMessage.error('ログインに失敗しました。メールアドレスとパスワードを確認してください。')
     } finally {

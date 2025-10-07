@@ -10,13 +10,13 @@
             ホーム
           </NuxtLink>
 
-          <NuxtLink v-if="authStore.isLoggedIn"  to="/todos" class="nav-link">
+          <NuxtLink v-if="isAuthenticated" to="/todos" class="nav-link">
             TODO一覧
           </NuxtLink>
-          <span v-if="authStore.isLoggedIn" class="nav-user">
-            {{ authStore.user?.email || 'ユーザー' }}
+          <span v-if="isAuthenticated" class="nav-user">
+            {{ user?.email || 'ユーザー' }}
           </span>
-          <button v-if="authStore.isLoggedIn" class="nav-button" @click="handleLogout">
+          <button v-if="isAuthenticated" class="nav-button" @click="handleLogout">
             ログアウト
           </button>
           <NuxtLink v-else to="/login" class="nav-link">
@@ -39,15 +39,8 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
 
-const authStore = useAuthStore()
+const { isAuthenticated, user, logout } = useAuth()
 const router = useRouter()
-
-// クライアントサイドで認証状態を復元
-onMounted(() => {
-  if (process.client && !authStore.isAuthenticated) {
-    authStore.restoreAuth()
-  }
-})
 
 // ログアウト処理
 const handleLogout = async () => {
@@ -62,7 +55,7 @@ const handleLogout = async () => {
       }
     )
 
-    authStore.logout()
+    logout()
     ElMessage.success('ログアウトしました')
     await router.push('/login')
   } catch {

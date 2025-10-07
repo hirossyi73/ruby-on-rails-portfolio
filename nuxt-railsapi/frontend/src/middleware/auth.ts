@@ -1,16 +1,22 @@
-export default defineNuxtRouteMiddleware(() => {
-  const authStore = useAuthStore()
+/**
+ * 認証ミドルウェア（SSR/CSR両対応）
+ * Cookie ベースの認証ガード
+ */
+export default defineNuxtRouteMiddleware(async (to) => {
+  // 公開ページは認証不要
+  const publicPages = ['/login', '/']
+  if (publicPages.includes(to.path)) {
+    return
+  }
 
-  // クライアントサイドでのみ実行
-  if (process.client) {
-    // 初回アクセス時にトークンを復元
-    if (!authStore.isAuthenticated) {
-      authStore.restoreAuth()
-    }
+  // useAuth composable で認証確認
+  const { checkAuth } = useAuth()
+  const isAuthenticated = await checkAuth()
 
-    // 認証されていない場合はログインページへリダイレクト
-    if (!authStore.isLoggedIn) {
-      return navigateTo('/login')
-    }
+  // 未認証の場合はログインページへリダイレクト
+  if (!isAuthenticated) {
+    return navigateTo('/login', {
+      redirectCode: process.server ? 302 : undefined
+    })
   }
 })
