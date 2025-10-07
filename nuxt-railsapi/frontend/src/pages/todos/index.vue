@@ -109,7 +109,7 @@
               </el-select>
 
               <!-- ページサイズ選択 -->
-              <el-select v-model="filters.per_page" size="small" class="w-24" @change="changePageSize">
+              <el-select v-model="filters.per_page" size="small" class="w-24">
                 <el-option label="10" :value="10" />
                 <el-option label="20" :value="20" />
                 <el-option label="50" :value="50" />
@@ -226,12 +226,13 @@
       </el-card>
 
       <!-- ページネーション -->
-      <div v-if="pagination && pagination.total_pages > 1" class="flex justify-center">
+      <div v-if="pagination && pagination.total_pages > 1" class="flex justify-center mb-8">
         <el-pagination
-          v-model:current-page="filters.page"
+          :current-page="filters.page"
           :page-size="filters.per_page"
           :total="pagination.total_count"
           :page-sizes="[10, 20, 50, 100]"
+          :small="false"
           layout="total, sizes, prev, pager, next, jumper"
           background
           @current-change="handlePageChange"
@@ -358,19 +359,13 @@ const refreshTodos = () => {
 // ページ変更
 const handlePageChange = (page: number) => {
   filters.value.page = page
-  fetchTodos()
+  // watchによる自動フェッチがあるため、ここでのfetchTodos()呼び出しは不要
 }
 
 // ページサイズ変更
 const handleSizeChange = (size: number) => {
   filters.value.per_page = size
-  filters.value.page = 1
-  fetchTodos()
-}
-
-const changePageSize = () => {
-  filters.value.page = 1
-  fetchTodos()
+  filters.value.page = 1 // ページサイズ変更時は1ページ目に戻る
 }
 
 // TODOの状態切り替え
@@ -447,7 +442,7 @@ const filteredTodos = computed(() => {
 // ページ読み込み時にTODOを取得
 onMounted(async () => {
   const { hideLoading } = useLoading()
-  
+
   try {
     await fetchTodos()
   } finally {

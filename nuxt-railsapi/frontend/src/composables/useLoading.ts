@@ -3,13 +3,13 @@ import { useLoadingStore } from '~/stores/loading'
 
 export const useLoading = () => {
   const loadingStore = useLoadingStore()
-  
+
   const showLoading = () => {
     // 既にローディング中の場合は何もしない
     if (loadingStore.isLoading) {
       return
     }
-    
+
     const loadingElement = document.getElementById('global-loading')
     if (loadingElement) {
       // ローディングを表示
@@ -17,7 +17,7 @@ export const useLoading = () => {
       loadingStore.isLoading = true
     }
   }
-  
+
   const hideLoading = () => {
     const loadingElement = document.getElementById('global-loading')
     if (loadingElement) {
@@ -26,7 +26,7 @@ export const useLoading = () => {
       loadingStore.isLoading = false
     }
   }
-  
+
   return {
     showLoading,
     hideLoading,
