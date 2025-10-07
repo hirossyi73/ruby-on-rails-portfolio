@@ -102,26 +102,14 @@
 
             <div class="flex items-center space-x-4">
               <!-- フィルター機能 -->
-              <el-select
-                v-model="filters.status"
-                placeholder="ステータス"
-                size="small"
-                class="w-32"
-                :clearable="false"
-              >
+              <el-select v-model="filters.status" placeholder="ステータス" size="small" class="w-32">
                 <el-option label="すべて" value="all" />
                 <el-option label="完了" value="completed" />
                 <el-option label="未完了" value="pending" />
               </el-select>
 
               <!-- ページサイズ選択 -->
-              <el-select
-                v-model="filters.per_page"
-                size="small"
-                class="w-24"
-                :clearable="false"
-                @change="changePageSize"
-              >
+              <el-select v-model="filters.per_page" size="small" class="w-24" @change="changePageSize">
                 <el-option label="10" :value="10" />
                 <el-option label="20" :value="20" />
                 <el-option label="50" :value="50" />
@@ -458,17 +446,12 @@ const filteredTodos = computed(() => {
 
 // ページ読み込み時にTODOを取得
 onMounted(() => {
-  // eslint-disable-next-line no-console
-  console.log('初期フィルター設定:', filters.value)
   fetchTodos()
 })
 
-// フィルター変更時に自動でリフレッシュ（初回実行を除く）
-watch(filters, (_newFilters, oldFilters) => {
-  // 初回実行時（oldFiltersがundefined）は無視
-  if (oldFilters) {
-    fetchTodos()
-  }
+// フィルター変更時に自動でリフレッシュ
+watch(filters, () => {
+  fetchTodos()
 }, { deep: true })
 </script>
 
