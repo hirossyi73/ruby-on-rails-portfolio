@@ -60,6 +60,6 @@ class Api::V1::TodosController < ApplicationController
   end
 
   def todo_params
-    params.permit(:title, :completed)
+    params.permit(:title, :description, :completed)
   end
 end

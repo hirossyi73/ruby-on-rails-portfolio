@@ -16,13 +16,36 @@ puts "Redirect URI: #{oauth_app.redirect_uri}"
 
 # Create some sample todos for development
 todos = [
-  { title: "開発環境のセットアップ", completed: true },
-  { title: "Rails チュートリアルを読む", completed: false },
-  { title: "Todo 一覧ページを作る", completed: false }
+  { 
+    title: "開発環境のセットアップ", 
+    description: "Docker、Rails、Vue.jsの開発環境を構築する",
+    completed: true 
+  },
+  { 
+    title: "Rails チュートリアルを読む", 
+    description: "Rails Guidesを一通り読んでMVCアーキテクチャを理解する",
+    completed: false 
+  },
+  { 
+    title: "Todo 一覧ページを作る", 
+    description: "Element PlusとTailwind CSSを使って美しいTodo一覧ページを実装する",
+    completed: false 
+  },
+  {
+    title: "API仕様書を作成",
+    description: "フロントエンドとバックエンドのAPI連携のための仕様書を作成する",
+    completed: false
+  },
+  {
+    title: "テストケースの追加",
+    description: "RSpecを使ってTodoモデルとAPIエンドポイントのテストを作成する",
+    completed: false
+  }
 ]
 
 todos.each do |attrs|
   Todo.find_or_create_by!(title: attrs[:title]) do |t|
+    t.description = attrs[:description]
     t.completed = attrs[:completed]
   end
 end

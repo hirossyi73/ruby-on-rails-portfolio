@@ -3,6 +3,7 @@ class TodoSerializer
     {
       id: todo.id,
       title: todo.title,
+      description: todo.description,
       completed: todo.completed,
       created_at: todo.created_at,
       updated_at: todo.updated_at
