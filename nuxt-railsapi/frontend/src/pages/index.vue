@@ -12,15 +12,15 @@
               Nuxt + Rails API
             </h1>
           </div>
-          
+
           <div class="flex items-center space-x-4">
-            <el-button type="primary" @click="checkApiStatus" :loading="isLoading">
+            <el-button type="primary" :loading="isLoading" @click="checkApiStatus">
               <el-icon><Connection /></el-icon>
               API確認
             </el-button>
-            
-            <el-tag 
-              :type="apiConnected ? 'success' : 'danger'" 
+
+            <el-tag
+              :type="apiConnected ? 'success' : 'danger'"
               size="large"
               effect="dark"
             >
@@ -40,11 +40,11 @@
             <Star />
           </el-icon>
         </div>
-        
+
         <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
           こんにちは！
         </h2>
-        
+
         <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">
           Nuxt.js と Rails API を使用したモダンなフルスタックアプリケーションへようこそ！
           <br>
@@ -63,8 +63,8 @@
 
       <!-- 機能カード -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-        <el-card 
-          v-for="feature in features" 
+        <el-card
+          v-for="feature in features"
           :key="feature.id"
           shadow="hover"
           class="feature-card cursor-pointer transition-all duration-300 hover:scale-105"
@@ -80,14 +80,14 @@
               </span>
             </div>
           </template>
-          
+
           <p class="text-gray-600 leading-relaxed mb-4">
             {{ feature.description }}
           </p>
-          
+
           <div class="flex flex-wrap gap-2">
-            <el-tag 
-              v-for="tech in feature.technologies" 
+            <el-tag
+              v-for="tech in feature.technologies"
               :key="tech"
               size="small"
               :type="feature.tagType"
@@ -104,33 +104,23 @@
         <h3 class="text-2xl font-bold text-gray-900 mb-6">
           アプリケーションを探索
         </h3>
-        
+
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <el-button 
-            type="primary" 
+          <el-button
+            type="primary"
             size="large"
-            @click="navigateToTodos"
             class="min-w-[200px]"
+            @click="navigateToTodos"
           >
             <el-icon><Document /></el-icon>
             TODO一覧を見る
           </el-button>
-          
-          <el-button 
-            type="success" 
+
+          <el-button
+            type="info"
             size="large"
-            @click="navigateToDemo"
             class="min-w-[200px]"
-          >
-            <el-icon><View /></el-icon>
-            デモページ
-          </el-button>
-          
-          <el-button 
-            type="info" 
-            size="large"
             @click="openGithub"
-            class="min-w-[200px]"
           >
             <el-icon><Link /></el-icon>
             GitHub
@@ -140,8 +130,8 @@
 
       <!-- 統計情報 -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-16">
-        <div 
-          v-for="stat in stats" 
+        <div
+          v-for="stat in stats"
           :key="stat.label"
           class="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-lg transition-shadow"
         >
@@ -162,8 +152,10 @@
     <footer class="bg-gray-900 text-white py-8 mt-16">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <p class="text-gray-400">
-          © 2024 Nuxt + Rails API Project. Built with 
-          <el-icon color="#41b883" class="mx-1"><Star /></el-icon> 
+          © 2024 Nuxt + Rails API Project. Built with
+          <el-icon color="#41b883" class="mx-1">
+            <Star />
+          </el-icon>
           Vue.js & Rails
         </p>
       </div>
@@ -173,19 +165,17 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import { 
-  Monitor, 
-  Connection, 
-  Star, 
-  Document, 
-  View, 
+import {
+  Monitor,
+  Connection,
+  Star,
+  Document,
+  View,
   Link,
   Platform,
   Lightning,
   Box,
   DataAnalysis,
-  User,
-  Timer,
   Setting
 } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
@@ -194,9 +184,9 @@ import { ElMessage } from 'element-plus'
 useHead({
   title: 'ホーム - Nuxt + Rails API',
   meta: [
-    { 
-      name: 'description', 
-      content: 'Element Plus と Tailwind CSS を使用したモダンなフルスタックアプリケーション' 
+    {
+      name: 'description',
+      content: 'Element Plus と Tailwind CSS を使用したモダンなフルスタックアプリケーション'
     }
   ]
 })
@@ -205,6 +195,9 @@ useHead({
 const isLoading = ref(false)
 const apiConnected = ref(false)
 const apiMessage = ref('')
+
+// useApiコンポーザブルを使用
+const api = useApi()
 
 // 機能データ
 const features = reactive([
@@ -296,12 +289,10 @@ const stats = reactive([
 const checkApiStatus = async () => {
   isLoading.value = true
   apiMessage.value = ''
-  
+
   try {
-    const response = await $fetch('/health', {
-      baseURL: 'http://localhost:3000'
-    })
-    
+    const response = await api.get('/health') as { status: string }
+
     if (response.status === 'OK') {
       apiConnected.value = true
       apiMessage.value = 'APIに正常に接続されています'
@@ -315,6 +306,7 @@ const checkApiStatus = async () => {
     apiConnected.value = false
     apiMessage.value = 'APIへの接続でエラーが発生しました'
     ElMessage.error('APIへの接続でエラーが発生しました')
+    // eslint-disable-next-line no-console
     console.error('API Error:', error)
   } finally {
     isLoading.value = false
@@ -339,6 +331,7 @@ const openGithub = () => {
 
 // ページロード時にAPI状態を確認
 onMounted(() => {
+  // eslint-disable-next-line no-console
   console.log('Indexページが読み込まれました')
   checkApiStatus()
 })
