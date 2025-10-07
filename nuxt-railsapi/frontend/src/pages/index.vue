@@ -326,10 +326,18 @@ const openGithub = () => {
 }
 
 // ページロード時にAPI状態を確認
-onMounted(() => {
+onMounted(async () => {
   // eslint-disable-next-line no-console
   console.log('Indexページが読み込まれました')
-  checkApiStatus()
+  
+  const { hideLoading } = useLoading()
+  
+  try {
+    await checkApiStatus()
+  } finally {
+    // ページ読み込み完了後にローディング解除
+    hideLoading()
+  }
 })
 </script>
 

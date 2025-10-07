@@ -445,8 +445,15 @@ const filteredTodos = computed(() => {
 })
 
 // ページ読み込み時にTODOを取得
-onMounted(() => {
-  fetchTodos()
+onMounted(async () => {
+  const { hideLoading } = useLoading()
+  
+  try {
+    await fetchTodos()
+  } finally {
+    // ページ読み込み完了後にローディング解除
+    hideLoading()
+  }
 })
 
 // フィルター変更時に自動でリフレッシュ

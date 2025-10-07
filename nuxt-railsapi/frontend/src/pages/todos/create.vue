@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import {
   Plus,
   ArrowLeft,
@@ -128,6 +128,12 @@ const handleSubmit = async (formData: TodoFormData) => {
 const navigateToTodos = () => {
   navigateTo('/todos')
 }
+
+// ページロード時にローディング解除
+onMounted(() => {
+  const { hideLoading } = useLoading()
+  hideLoading()
+})
 </script>
 
 <style scoped>
