@@ -10,6 +10,16 @@ Doorkeeper.configure do
     current_user || warden.authenticate!(scope: :user)
   end
 
+  # Resource Owner Password Credentials Grant Flow
+  # This block will be called only for password grant type
+  # and should authenticate the resource owner by credentials (e.g. username and password)
+  resource_owner_from_credentials do |_routes|
+    user = User.find_by(email: params[:username])
+    if user && user.valid_password?(params[:password])
+      user
+    end
+  end
+
   # If you didn't skip applications controller from Doorkeeper routes in your application routes.rb
   # file then you need to declare this block in order to restrict access to the web interface for
   # adding oauth authorized applications. In other case it will return 403 Forbidden response
@@ -364,7 +374,7 @@ Doorkeeper.configure do
   #   https://datatracker.ietf.org/doc/html/rfc6819#section-4.4.2
   #   https://datatracker.ietf.org/doc/html/rfc6819#section-4.4.3
   #
-  # grant_flows %w[authorization_code client_credentials]
+  grant_flows %w[password]
 
   # Allows to customize OAuth grant flows that +each+ application support.
   # You can configure a custom block (or use a class respond to `#call`) that must

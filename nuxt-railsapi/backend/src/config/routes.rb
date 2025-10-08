@@ -4,10 +4,8 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Authentication endpoints
-  namespace :auth do
-    get 'me', to: 'auth#me'
-    post 'revoke', to: 'auth#revoke'
-  end
+  get 'auth/me', to: 'auth#me'
+  post 'auth/revoke', to: 'auth#revoke'
 
   # API endpoints (protected by OAuth2)
   namespace :api do

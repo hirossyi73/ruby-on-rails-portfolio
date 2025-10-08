@@ -14,7 +14,7 @@ docker-compose run --rm frontend bash -c "vue create /app --default --force"
 
 # データベースのセットアップ
 echo "データベースをセットアップしています..."
-docker-compose run --rm backend bash -c "bundle exec rails db:create && bundle exec rails db:migrate"
+docker-compose run --rm backend bash -c "bundle exec rails db:create && bundle exec rails db:migrate && bundle exec rails db:seed"
 
 echo "初期化が完了しました！"
 echo ""

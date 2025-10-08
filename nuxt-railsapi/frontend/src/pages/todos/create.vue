@@ -70,6 +70,14 @@ useHead({
   ]
 })
 
+// 認証ミドルウェアを適用
+definePageMeta({
+  middleware: 'auth'
+})
+
+// API
+const api = useApi()
+
 // 送信状態
 const isSubmitting = ref(false)
 
@@ -79,24 +87,11 @@ const handleSubmit = async (formData: TodoFormData) => {
     isSubmitting.value = true
 
     // APIでTODO作成
-    const { $config } = useNuxtApp()
-    const baseUrl = $config.public.apiBaseUrl
-    
-    const response = await fetch(`${baseUrl}/api/v1/todos`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        title: formData.title,
-        description: formData.description || undefined,
-        completed: formData.completed
-      })
+    await api.post('/api/v1/todos', {
+      title: formData.title,
+      description: formData.description || undefined,
+      completed: formData.completed
     })
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
 
     ElMessage.success(`TODO「${formData.title}」を作成しました`)
 
@@ -115,6 +110,7 @@ const handleSubmit = async (formData: TodoFormData) => {
     await navigateTo('/todos')
   } catch (err) {
     if (err instanceof Error && err.message !== 'cancel') {
+      // eslint-disable-next-line no-console
       console.error('TODO作成に失敗しました:', err)
       ElMessage.error('TODO作成に失敗しました')
     }

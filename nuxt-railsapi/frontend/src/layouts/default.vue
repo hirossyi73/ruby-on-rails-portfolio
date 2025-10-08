@@ -6,8 +6,22 @@
           <h1>Nuxt + Rails API</h1>
         </div>
         <div class="navbar-menu">
-          <NuxtLink to="/" class="nav-link">ホーム</NuxtLink>
-          <NuxtLink to="/todos" class="nav-link">TODO一覧</NuxtLink>
+          <NuxtLink to="/" class="nav-link">
+            ホーム
+          </NuxtLink>
+
+          <NuxtLink v-if="isAuthenticated" to="/todos" class="nav-link">
+            TODO一覧
+          </NuxtLink>
+          <span v-if="isAuthenticated" class="nav-user">
+            {{ user?.email || 'ユーザー' }}
+          </span>
+          <button v-if="isAuthenticated" class="nav-button" @click="handleLogout">
+            ログアウト
+          </button>
+          <NuxtLink v-else to="/login" class="nav-link">
+            ログイン
+          </NuxtLink>
         </div>
       </nav>
     </header>
@@ -23,7 +37,31 @@
 </template>
 
 <script setup lang="ts">
-// レイアウト用のロジックがあればここに記述
+import { ElMessage, ElMessageBox } from 'element-plus'
+
+const { isAuthenticated, user, logout } = useAuth()
+const router = useRouter()
+
+// ログアウト処理
+const handleLogout = async () => {
+  try {
+    await ElMessageBox.confirm(
+      'ログアウトしますか？',
+      '確認',
+      {
+        confirmButtonText: 'ログアウト',
+        cancelButtonText: 'キャンセル',
+        type: 'warning'
+      }
+    )
+
+    logout()
+    ElMessage.success('ログアウトしました')
+    await router.push('/login')
+  } catch {
+    // キャンセル時は何もしない
+  }
+}
 </script>
 
 <style scoped>
@@ -63,8 +101,30 @@
   font-weight: bold;
 }
 
+.nav-user {
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.nav-button {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 0.9rem;
+}
+
+.nav-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
 main {
-  min-height: calc(100vh - 120px);
+  min-height: calc(100vh - 135px);
   padding: 2rem;
 }
 
