@@ -3,7 +3,10 @@ import type { RequestOptions } from '~/types'
 export const useApi = () => {
   const config = useRuntimeConfig()
 
-  const apiRequest = async (endpoint: string, options: RequestOptions & any = {}) => {
+  const apiRequest = async (
+    endpoint: string,
+    options: RequestOptions & any = {}
+  ) => {
     // SSR時はサーバー側URL、CSR時はパブリックURL
     const baseUrl = process.server
       ? config.apiBaseUrl
@@ -34,7 +37,7 @@ export const useApi = () => {
     // ヘッダーを構築
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      ...options.headers
+      ...options.headers,
     }
 
     // 認証トークンがあればAuthorizationヘッダーに追加
@@ -44,7 +47,7 @@ export const useApi = () => {
 
     return await $fetch(url, {
       ...options,
-      headers
+      headers,
     })
   }
 
@@ -57,6 +60,6 @@ export const useApi = () => {
     put: (endpoint: string, body: any, options?: any) =>
       apiRequest(endpoint, { method: 'PUT', body, ...(options || {}) }),
     delete: (endpoint: string, options?: any) =>
-      apiRequest(endpoint, { method: 'DELETE', ...(options || {}) })
+      apiRequest(endpoint, { method: 'DELETE', ...(options || {}) }),
   }
 }
