@@ -9,9 +9,9 @@ export const useApi = () => {
       ? config.apiBaseUrl
       : config.public.apiBaseUrl
 
-    // 認証トークンを取得
+    // 認証トークンを取得（SSR/CSR両対応）
     let authToken = options.token // 直接指定されたトークン
-    if (!authToken && process.client) {
+    if (!authToken) {
       // useAuth からトークンを取得
       const { accessToken } = useAuth()
       authToken = accessToken.value

@@ -109,6 +109,9 @@ useHead({
 const route = useRoute()
 const todoId = Number(route.params.id)
 
+// API
+const api = useApi()
+
 // リアクティブデータ
 const todo = ref<Todo | null>(null)
 const pending = ref(false)
@@ -119,23 +122,12 @@ const isSubmitting = ref(false)
 const fetchTodo = async () => {
   pending.value = true
   error.value = null
-  
+
   try {
-    const { $config } = useNuxtApp()
-    const baseUrl = $config.public.apiBaseUrl
-    
-    const response = await fetch(`${baseUrl}/api/v1/todos/${todoId}`)
-    
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('TODOが見つかりません')
-      }
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-    
-    const data = await response.json()
+    const data = await api.get(`/api/v1/todos/${todoId}`) as Todo
     todo.value = data
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('TODOの取得に失敗しました:', err)
     error.value = err instanceof Error ? err.message : 'TODOの取得に失敗しました'
     ElMessage.error('TODOの取得に失敗しました')
@@ -149,26 +141,12 @@ const handleSubmit = async (formData: TodoFormData) => {
   try {
     isSubmitting.value = true
 
-    const { $config } = useNuxtApp()
-    const baseUrl = $config.public.apiBaseUrl
-    
-    const response = await fetch(`${baseUrl}/api/v1/todos/${todoId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        title: formData.title,
-        description: formData.description || undefined,
-        completed: formData.completed
-      })
-    })
+    const updatedTodo = await api.put(`/api/v1/todos/${todoId}`, {
+      title: formData.title,
+      description: formData.description || undefined,
+      completed: formData.completed
+    }) as Todo
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-
-    const updatedTodo = await response.json()
     todo.value = updatedTodo
 
     ElMessage.success(`TODO「${formData.title}」を更新しました`)
@@ -188,6 +166,7 @@ const handleSubmit = async (formData: TodoFormData) => {
     await navigateTo('/todos')
   } catch (err) {
     if (err instanceof Error && err.message !== 'cancel') {
+      // eslint-disable-next-line no-console
       console.error('TODO更新に失敗しました:', err)
       ElMessage.error('TODO更新に失敗しました')
     }
