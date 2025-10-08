@@ -185,9 +185,12 @@ const navigateToTodos = () => {
 onMounted(() => {
   if (!todoId || isNaN(todoId)) {
     error.value = '無効なTODO IDです'
-    return
+  } else {
+    fetchTodo()
   }
-  fetchTodo()
+
+  const { hideLoading } = useLoading()
+  hideLoading()
 })
 </script>
 
