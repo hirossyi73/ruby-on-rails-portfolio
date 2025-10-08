@@ -125,25 +125,19 @@ export const useAuth = () => {
     }
 
     // SSR時はサーバーAPIで検証
-    if (process.server) {
-      try {
-        const headers = useRequestHeaders(['cookie'])
-        const result = await $fetch<{
-          authenticated: boolean
-          user?: User
-        } | null>('/api/auth/me', {
-          headers,
-        })
+    try {
+      // Nitroのイベントハンドラーを使用してサーバーAPIを呼び出す
+      const api = useApi()
+      const data = await api.get('/auth/me')
 
-        // ユーザー情報をCookieに保存
-        if (result?.user) {
-          userCookie.value = result.user
-        }
-
-        return result?.authenticated ?? false
-      } catch {
-        return false
+      // ユーザー情報をCookieに保存
+      if (data && data.id) {
+        userCookie.value = data
       }
+
+      return data && data.id
+    } catch (error) {
+      return false
     }
 
     // CSR時はトークンの存在のみで判定（APIコールは不要）

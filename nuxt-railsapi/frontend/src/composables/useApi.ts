@@ -49,13 +49,14 @@ export const useApi = () => {
   }
 
   return {
-    get: (endpoint: string, params?: Record<string, any>) =>
-      apiRequest(endpoint, { method: 'GET', params }),
-    post: (endpoint: string, body: any) =>
-      apiRequest(endpoint, { method: 'POST', body }),
-    put: (endpoint: string, body: any) =>
-      apiRequest(endpoint, { method: 'PUT', body }),
-    delete: (endpoint: string) =>
-      apiRequest(endpoint, { method: 'DELETE' })
+    // 各メソッドはオプションを受け取る（token や headers など）
+    get: (endpoint: string, options?: any) =>
+      apiRequest(endpoint, { method: 'GET', ...(options || {}) }),
+    post: (endpoint: string, body: any, options?: any) =>
+      apiRequest(endpoint, { method: 'POST', body, ...(options || {}) }),
+    put: (endpoint: string, body: any, options?: any) =>
+      apiRequest(endpoint, { method: 'PUT', body, ...(options || {}) }),
+    delete: (endpoint: string, options?: any) =>
+      apiRequest(endpoint, { method: 'DELETE', ...(options || {}) })
   }
 }

@@ -91,7 +91,6 @@ useHead({
 
 // useAuth composable を使用
 const { login } = useAuth()
-const router = useRouter()
 
 // フォームデータ
 const loginFormRef = ref<FormInstance>()
@@ -129,7 +128,11 @@ const handleLogin = async () => {
 
       if (result.success) {
         ElMessage.success('ログインに成功しました')
-        await router.push('/todos')
+        
+        // リダイレクト先があればそこへ、なければTODOページへ
+        const route = useRoute()
+        const redirectPath = (route.query.redirect as string) || '/todos'
+        await navigateTo(redirectPath)
       } else {
         ElMessage.error('ログインに失敗しました。メールアドレスとパスワードを確認してください。')
       }

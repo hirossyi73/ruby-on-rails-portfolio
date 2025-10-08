@@ -15,8 +15,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   // 未認証の場合はログインページへリダイレクト
   if (!isAuthenticated) {
-    return navigateTo('/login', {
-      redirectCode: process.server ? 302 : undefined
+    return navigateTo({
+      path: '/login',
+      query: { redirect: to.fullPath }
     })
   }
 })
