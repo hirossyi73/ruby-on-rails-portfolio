@@ -32,6 +32,10 @@
     "@element-plus/nuxt": "^1.0.0",
     "@element-plus/icons-vue": "^2.1.0"
   },
+  "optionalDependencies": {
+    "@oxc-parser/binding-linux-x64-gnu": "latest",
+    "@rollup/rollup-linux-x64-gnu": "latest"
+  },
   "eslintConfig": {
     "root": true,
     "env": {
