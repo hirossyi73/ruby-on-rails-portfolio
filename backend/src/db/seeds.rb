@@ -4,7 +4,7 @@
 
 # Create OAuth2 Application for Vue.js frontend
 oauth_app = Doorkeeper::Application.find_or_create_by!(name: "Vue.js Frontend") do |app|
-  app.redirect_uri = "http://localhost:#{ENV['FRONTEND_PORT'] || 8080}/callback"
+  app.redirect_uri = "http://localhost:#{ENV['WEB_PORT'] || 8080}/callback"
   app.scopes = "read write"
   app.confidential = false # Public client for SPA
 end

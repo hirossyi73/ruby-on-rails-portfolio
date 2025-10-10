@@ -58,8 +58,7 @@ cp .env.example .env
 
 ```bash
 # ポート設定例
-FRONTEND_PORT=3001
-BACKEND_PORT=3002
+WEB_PORT=3001
 DATABASE_PORT=3307
 ```
 
@@ -111,18 +110,16 @@ docker-compose exec frontend bash
 
 各サービスのポート番号は`.env`ファイルで設定できます：
 
-| サービス       | 環境変数        | デフォルト値 | 説明                         |
-| -------------- | --------------- | ------------ | ---------------------------- |
-| フロントエンド | `FRONTEND_PORT` | 3000         | Nuxt.js 開発サーバーのポート |
-| バックエンド   | `BACKEND_PORT`  | 3001         | Rails API サーバーのポート   |
-| データベース   | `DATABASE_PORT` | 3306         | MySQL のポート               |
+| サービス         | 環境変数        | デフォルト値 | 説明                         |
+| ---------------- | --------------- | ------------ | ---------------------------- |
+| Web サイトポート | `WEB_PORT`      | 3000         | Nuxt.js 開発サーバーのポート |
+| データベース     | `DATABASE_PORT` | 3306         | MySQL のポート               |
 
 例：ポート番号を変更する場合
 
 ```bash
 # .envファイル
-FRONTEND_PORT=23000
-BACKEND_PORT=23001
+WEB_PORT=23000
 DATABASE_PORT=23306
 ```
 
