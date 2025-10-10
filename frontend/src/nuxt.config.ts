@@ -35,7 +35,7 @@ export default defineNuxtConfig({
 
     // パブリックキー（クライアントサイドでも利用可能）
     public: {
-      apiBaseUrl: 'http://localhost:3000',
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:80',
       oauthClientId: process.env.NUXT_PUBLIC_OAUTH_CLIENT_ID || '',
       oauthClientSecret: process.env.NUXT_PUBLIC_OAUTH_CLIENT_SECRET || '',
     },

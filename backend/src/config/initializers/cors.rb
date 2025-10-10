@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "http://localhost:#{ENV['FRONTEND_PORT'] || 8080}", "http://localhost:#{ENV['BACKEND_PORT'] || 3000}"
+    origins "http://localhost:#{ENV['WEB_PORT'] || 80}"
 
     resource "*",
       headers: :any,

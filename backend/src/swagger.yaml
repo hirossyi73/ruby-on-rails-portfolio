@@ -44,7 +44,7 @@ paths:
                     type: string
                     example: OK
 
-  /oauth/token:
+  /api/oauth/token:
     post:
       tags:
         - Authentication
@@ -107,7 +107,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /auth/me:
+  /api/auth/me:
     get:
       tags:
         - Authentication
@@ -141,7 +141,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /auth/revoke:
+  /api/auth/revoke:
     post:
       tags:
         - Authentication
@@ -514,10 +514,10 @@ components:
       description: OAuth2認証フロー
       flows:
         password:
-          tokenUrl: /oauth/token
+          tokenUrl: /api/oauth/token
           scopes: {}
         clientCredentials:
-          tokenUrl: /oauth/token
+          tokenUrl: /api/oauth/token
           scopes: {}
 
   schemas:

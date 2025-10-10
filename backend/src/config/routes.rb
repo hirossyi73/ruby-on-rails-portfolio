@@ -1,14 +1,18 @@
 Rails.application.routes.draw do
-  use_doorkeeper
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Authentication endpoints
-  get 'auth/me', to: 'auth#me'
-  post 'auth/revoke', to: 'auth#revoke'
+  # OAuth2 endpoints with api prefix
+  scope path: '/api' do
+    use_doorkeeper
+  end
 
   # API endpoints (protected by OAuth2)
   namespace :api do
+    # 認証エンドポイント（グローバルコントローラーを明示的に指定）
+    get 'auth/me', controller: '/auth', action: 'me'
+    post 'auth/revoke', controller: '/auth', action: 'revoke'
+
     namespace :v1 do
       resources :todos
       resources :users, only: [:show, :update]

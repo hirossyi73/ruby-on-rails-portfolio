@@ -12,21 +12,6 @@
               Nuxt + Rails API
             </h1>
           </div>
-
-          <div class="flex items-center space-x-4">
-            <el-button type="primary" :loading="isLoading" @click="checkApiStatus">
-              <el-icon><Connection /></el-icon>
-              API確認
-            </el-button>
-
-            <el-tag
-              :type="apiConnected ? 'success' : 'danger'"
-              size="large"
-              effect="dark"
-            >
-              {{ apiConnected ? '接続中' : '切断' }}
-            </el-tag>
-          </div>
         </div>
       </div>
     </header>
@@ -191,12 +176,8 @@ useHead({
 })
 
 // リアクティブデータ
-const isLoading = ref(false)
 const apiConnected = ref(false)
 const apiMessage = ref('')
-
-// useApiコンポーザブルを使用
-const api = useApi()
 
 // 機能データ
 const features = reactive([
@@ -284,34 +265,6 @@ const stats = reactive([
   }
 ])
 
-// メソッド
-const checkApiStatus = async () => {
-  isLoading.value = true
-  apiMessage.value = ''
-
-  try {
-    const response = await api.get('/health') as { status: string }
-
-    if (response.status === 'OK') {
-      apiConnected.value = true
-      apiMessage.value = 'APIに正常に接続されています'
-      ElMessage.success('APIに正常に接続されました')
-    } else {
-      apiConnected.value = false
-      apiMessage.value = 'APIへの接続に失敗しました'
-      ElMessage.error('APIへの接続に失敗しました')
-    }
-  } catch (error) {
-    apiConnected.value = false
-    apiMessage.value = 'APIへの接続でエラーが発生しました'
-    ElMessage.error('APIへの接続でエラーが発生しました')
-    // eslint-disable-next-line no-console
-    console.error('API Error:', error)
-  } finally {
-    isLoading.value = false
-  }
-}
-
 const handleFeatureClick = (feature: any) => {
   ElMessage.info(`${feature.title} の詳細情報を表示します`)
 }
@@ -330,13 +283,8 @@ onMounted(async () => {
   console.log('Indexページが読み込まれました')
 
   const { hideLoading } = useLoading()
-
-  try {
-    await checkApiStatus()
-  } finally {
-    // ページ読み込み完了後にローディング解除
-    hideLoading()
-  }
+  // ページ読み込み完了後にローディング解除
+  hideLoading()
 })
 </script>
 
