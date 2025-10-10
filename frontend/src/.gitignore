@@ -42,3 +42,6 @@ lerna-debug.log*
 coverage
 *.lcov
 .nyc_output
+
+# インストール不安定だったので追加
+package-lock.json
