@@ -28,5 +28,5 @@ EXPOSE 3000
 
 # Nuxt.js開発サーバーを起動
 # 環境に応じてサーバーを起動
-CMD ["sh", "-c", "if [ \"$NODE_ENV\" = \"development\" ]; then npm run dev; else npm start; fi"]
+CMD ["sh", "-c", "if [ \"$NODE_ENV\" = \"development\" ]; then npm run dev; else npm run preview; fi"]
 
