@@ -70,4 +70,9 @@ Rails.application.configure do
 
   # Docker コンテナ間通信用のホスト名を許可
   config.hosts << "backend"
+  
+  # 環境変数で指定されたドメインを許可
+  if ENV['WEB_DOMAIN'].present?
+    config.hosts << ENV['WEB_DOMAIN']
+  end
 end

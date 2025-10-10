@@ -49,7 +49,7 @@ services:
       DATABASE_PASSWORD: password
       DATABASE_NAME: nuxt_railsapi_development
       DATABASE_TEST_NAME: nuxt_railsapi_test
-      RAILS_ENV: development
+      RAILS_ENV: ${RAILS_ENV:-development}
       # OAuthのリダイレクト先設定のために追加
       WEB_DOMAIN: ${WEB_DOMAIN:-localhost}
     stdin_open: true
