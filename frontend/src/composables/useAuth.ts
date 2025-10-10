@@ -45,7 +45,7 @@ export const useAuth = () => {
     const api = useApi()
 
     try {
-      const data = (await api.post('/oauth/token', {
+      const data = (await api.post('/api/oauth/token', {
         grant_type: 'password',
         username: email,
         password,
@@ -93,7 +93,7 @@ export const useAuth = () => {
     const api = useApi()
 
     try {
-      const data = (await api.post('/oauth/token', {
+      const data = (await api.post('/api/oauth/token', {
         grant_type: 'refresh_token',
         refresh_token: refreshToken.value,
         client_id: config.public.oauthClientId,
@@ -128,7 +128,7 @@ export const useAuth = () => {
     try {
       // Nitroのイベントハンドラーを使用してサーバーAPIを呼び出す
       const api = useApi()
-      const data = await api.get('/auth/me')
+      const data = await api.get('/api/auth/me')
 
       // ユーザー情報をCookieに保存
       if (data && data.id) {

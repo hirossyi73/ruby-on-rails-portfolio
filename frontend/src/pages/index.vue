@@ -176,12 +176,8 @@ useHead({
 })
 
 // リアクティブデータ
-const isLoading = ref(false)
 const apiConnected = ref(false)
 const apiMessage = ref('')
-
-// useApiコンポーザブルを使用
-const api = useApi()
 
 // 機能データ
 const features = reactive([
