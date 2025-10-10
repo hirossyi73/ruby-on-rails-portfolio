@@ -16,8 +16,17 @@ RUN npm install
 # アプリケーションのソースコードをコピー
 COPY src/ .
 
+# 本番環境の場合のみビルドを実行
+RUN if [ "$NODE_ENV" = "development" ]; then \
+    echo "Development mode: skipping build"; \
+    else \
+    npm run build; \
+    fi
+
 # ポート3000を公開
 EXPOSE 3000
 
 # Nuxt.js開発サーバーを起動
-CMD ["npm", "run", "dev"]
+# 環境に応じてサーバーを起動
+CMD ["sh", "-c", "if [ \"$NODE_ENV\" = \"development\" ]; then npm run dev; else npm start; fi"]
+
