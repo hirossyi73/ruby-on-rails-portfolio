@@ -3,6 +3,7 @@ services:
   nginx:
     volumes:
       - certbot_files:/app/certbot:ro
+      - ./volumes/ssl:/etc/letsencrypt:ro
 
   backend:
     environment:
