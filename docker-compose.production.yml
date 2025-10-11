@@ -4,6 +4,9 @@ services:
     volumes:
       - certbot_files:/app/certbot:ro
       - ./volumes/ssl:/etc/letsencrypt:ro
+    ports:
+      - '${PORT_IRODE_CHECK_HTTP:-80}:80'
+      - '${PORT_IRODE_CHECK_HTTPS:-443}:443'
 
   backend:
     environment:
