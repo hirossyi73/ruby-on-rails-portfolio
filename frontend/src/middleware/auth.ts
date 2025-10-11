@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   console.log('[MIDDLEWARE] アクセス先:', to.path)
   console.log('[MIDDLEWARE] process.server:', process.server)
   console.log('[MIDDLEWARE] process.client:', process.client)
-  
+
   // 公開ページは認証不要
   const publicPages = ['/login', '/']
   if (publicPages.includes(to.path)) {
@@ -18,7 +18,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   // useAuth composable で認証確認
   const { checkAuth } = useAuth()
-  
+
   console.log('[MIDDLEWARE] 認証チェック開始')
   const isAuthenticated = await checkAuth()
   console.log('[MIDDLEWARE] 認証結果:', isAuthenticated)
@@ -32,6 +32,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
       query: { redirect: to.fullPath },
     })
   }
-  
+
   console.log('[MIDDLEWARE] 認証OK - ページへのアクセスを許可')
 })

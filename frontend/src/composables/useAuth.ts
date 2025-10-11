@@ -46,7 +46,7 @@ export const useAuth = () => {
     console.log('[AUTH] email:', email)
     console.log('[AUTH] process.server:', process.server)
     console.log('[AUTH] process.client:', process.client)
-    
+
     const api = useApi()
 
     try {
@@ -139,7 +139,7 @@ export const useAuth = () => {
     console.log('[AUTH] process.server:', process.server)
     console.log('[AUTH] process.client:', process.client)
     console.log('[AUTH] accessToken.value:', !!accessToken.value)
-    
+
     // トークンがない場合は未認証
     if (!accessToken.value) {
       console.log('[AUTH] アクセストークンなし - 未認証')
@@ -149,11 +149,11 @@ export const useAuth = () => {
     // SSR時はサーバーAPIで検証
     try {
       console.log('[AUTH] サーバーAPIでユーザー情報を確認中...')
-      
+
       // Nitroのイベントハンドラーを使用してサーバーAPIを呼び出す
       const api = useApi()
       const data = await api.get('/api/auth/me')
-      
+
       console.log('[AUTH] API応答:', data)
 
       // ユーザー情報をCookieに保存
