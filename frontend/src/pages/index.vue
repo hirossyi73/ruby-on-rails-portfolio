@@ -132,24 +132,11 @@
         </div>
       </div>
     </main>
-
-    <!-- フッター -->
-    <footer class="bg-gray-900 text-white py-8 mt-16">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <p class="text-gray-400">
-          © 2024 Nuxt + Rails API Project. Built with
-          <el-icon color="#41b883" class="mx-1">
-            <Star />
-          </el-icon>
-          Vue.js & Rails
-        </p>
-      </div>
-    </footer>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, markRaw } from 'vue'
 import {
   Monitor,
   Connection,
@@ -185,7 +172,7 @@ const features = reactive([
     id: 1,
     title: 'Nuxt.js',
     description: 'Vue.jsベースのフルスタックフレームワーク。SSR、SPA、静的サイト生成をサポート。',
-    icon: Platform,
+    icon: markRaw(Platform),
     color: '#41b883',
     tagType: 'success',
     technologies: ['Vue 3', 'TypeScript', 'SSR']
@@ -194,7 +181,7 @@ const features = reactive([
     id: 2,
     title: 'Rails API',
     description: '高速で信頼性の高いバックエンドAPI。RESTful設計とJSON形式でのデータ交換。',
-    icon: Lightning,
+    icon: markRaw(Lightning),
     color: '#cc0000',
     tagType: 'danger',
     technologies: ['Ruby', 'MySQL', 'REST API']
@@ -203,7 +190,7 @@ const features = reactive([
     id: 3,
     title: 'Docker',
     description: 'コンテナ化された開発環境。一貫性のある環境でチーム開発を効率化。',
-    icon: Box,
+    icon: markRaw(Box),
     color: '#2496ed',
     tagType: 'primary',
     technologies: ['Docker', 'Compose', 'Container']
@@ -212,7 +199,7 @@ const features = reactive([
     id: 4,
     title: 'Element Plus',
     description: 'Vue 3対応のUIコンポーネントライブラリ。美しく使いやすいインターフェース。',
-    icon: Star,
+    icon: markRaw(Star),
     color: '#409eff',
     tagType: 'primary',
     technologies: ['Components', 'Theme', 'Icons']
@@ -221,7 +208,7 @@ const features = reactive([
     id: 5,
     title: 'Tailwind CSS',
     description: 'ユーティリティファーストのCSSフレームワーク。高速でカスタマイズ可能。',
-    icon: Setting,
+    icon: markRaw(Setting),
     color: '#38bdf8',
     tagType: 'info',
     technologies: ['Utility', 'Responsive', 'JIT']
@@ -230,7 +217,7 @@ const features = reactive([
     id: 6,
     title: 'TypeScript',
     description: '型安全なJavaScript開発。大規模アプリケーションの開発効率を向上。',
-    icon: DataAnalysis,
+    icon: markRaw(DataAnalysis),
     color: '#3178c6',
     tagType: 'primary',
     technologies: ['Type Safety', 'IntelliSense', 'Refactoring']
@@ -242,25 +229,25 @@ const stats = reactive([
   {
     label: 'フロントエンド',
     value: 'Vue 3',
-    icon: Platform,
+    icon: markRaw(Platform),
     color: '#41b883'
   },
   {
     label: 'バックエンド',
     value: 'Rails 7',
-    icon: Lightning,
+    icon: markRaw(Lightning),
     color: '#cc0000'
   },
   {
     label: 'データベース',
     value: 'MySQL',
-    icon: DataAnalysis,
+    icon: markRaw(DataAnalysis),
     color: '#00618a'
   },
   {
     label: 'コンテナ',
     value: 'Docker',
-    icon: Box,
+    icon: markRaw(Box),
     color: '#2496ed'
   }
 ])
