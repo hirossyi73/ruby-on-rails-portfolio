@@ -139,17 +139,22 @@ const handleLogin = async () => {
         console.log('[LOGIN] ログイン結果:', result)
         console.log('[LOGIN] 現在のルート:', route.fullPath)
         
-        // 絶対URLを構築してページ遷移
+        // 絶対URLを構築
         const baseUrl = window.location.origin
         const fullUrl = baseUrl + redirectPath
         
         console.log('[LOGIN] window.location.hrefでページ遷移実行')
         console.log('[LOGIN] 完全URL:', fullUrl)
         
-        // 少し遅延を入れてCookie保存を確実にする
+        // Cookie保存を確実にするため、より長い遅延を設定
         setTimeout(() => {
-          window.location.href = fullUrl
-        }, 100)
+          // Cookieが実際に保存されているか確認
+          const cookies = document.cookie
+          console.log('[LOGIN] 遷移前のCookie確認:', cookies)
+          
+          // 強制的にページを置き換え（履歴に残さない）
+          window.location.replace(fullUrl)
+        }, 500)  // 500msに増加
       } else {
         ElMessage.error('ログインに失敗しました。メールアドレスとパスワードを確認してください。')
       }

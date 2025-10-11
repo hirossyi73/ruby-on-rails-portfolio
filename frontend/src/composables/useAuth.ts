@@ -44,8 +44,6 @@ export const useAuth = () => {
   const login = async (email: string, password: string) => {
     console.log('[AUTH] ログイン処理開始')
     console.log('[AUTH] email:', email)
-    console.log('[AUTH] process.server:', process.server)
-    console.log('[AUTH] process.client:', process.client)
 
     const api = useApi()
 
@@ -73,15 +71,27 @@ export const useAuth = () => {
       if (data.refresh_token) {
         refreshToken.value = data.refresh_token
       }
-      if (data.user) {
-        userCookie.value = data.user
-      }
 
       console.log('[AUTH] Cookie保存完了')
+      
+      // アクセストークンでユーザー情報を取得
+      console.log('[AUTH] ユーザー情報取得開始')
+      try {
+        const userInfo = await api.get('/api/auth/me', { 
+          token: data.access_token 
+        })
+        
+        console.log('[AUTH] ユーザー情報取得成功:', userInfo)
+        userCookie.value = userInfo
+      } catch (userError) {
+        console.log('[AUTH] ユーザー情報取得失敗:', userError)
+        // ユーザー情報取得に失敗しても、ログイン自体は成功とする
+      }
+
       console.log('[AUTH] accessToken.value:', !!accessToken.value)
       console.log('[AUTH] userCookie.value:', userCookie.value)
 
-      return { success: true, user: data.user }
+      return { success: true, user: userCookie.value }
     } catch (error) {
       console.log('[AUTH] ログイン失敗:', error)
       return { success: false, error }
@@ -136,8 +146,6 @@ export const useAuth = () => {
    */
   const checkAuth = async () => {
     console.log('[AUTH] checkAuth開始')
-    console.log('[AUTH] process.server:', process.server)
-    console.log('[AUTH] process.client:', process.client)
     console.log('[AUTH] accessToken.value:', !!accessToken.value)
 
     // トークンがない場合は未認証
