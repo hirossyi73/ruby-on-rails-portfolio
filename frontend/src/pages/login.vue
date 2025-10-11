@@ -139,9 +139,17 @@ const handleLogin = async () => {
         console.log('[LOGIN] ログイン結果:', result)
         console.log('[LOGIN] 現在のルート:', route.fullPath)
         
-        // 確実なページ遷移のためwindow.location.hrefを使用
+        // 絶対URLを構築してページ遷移
+        const baseUrl = window.location.origin
+        const fullUrl = baseUrl + redirectPath
+        
         console.log('[LOGIN] window.location.hrefでページ遷移実行')
-        window.location.href = redirectPath
+        console.log('[LOGIN] 完全URL:', fullUrl)
+        
+        // 少し遅延を入れてCookie保存を確実にする
+        setTimeout(() => {
+          window.location.href = fullUrl
+        }, 100)
       } else {
         ElMessage.error('ログインに失敗しました。メールアドレスとパスワードを確認してください。')
       }
