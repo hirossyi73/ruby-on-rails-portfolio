@@ -134,27 +134,14 @@ const handleLogin = async () => {
         const route = useRoute()
         const redirectPath = (route.query.redirect as string) || '/todos'
         
-        console.log('[LOGIN] ログイン処理完了 - リダイレクト前')
-        console.log('[LOGIN] リダイレクト先:', redirectPath)
-        console.log('[LOGIN] ログイン結果:', result)
-        console.log('[LOGIN] 現在のルート:', route.fullPath)
-        
         // 絶対URLを構築
         const baseUrl = window.location.origin
         const fullUrl = baseUrl + redirectPath
         
-        console.log('[LOGIN] window.location.hrefでページ遷移実行')
-        console.log('[LOGIN] 完全URL:', fullUrl)
-        
-        // Cookie保存を確実にするため、より長い遅延を設定
+        // 確実なページ遷移のため少し遅延を設定
         setTimeout(() => {
-          // Cookieが実際に保存されているか確認
-          const cookies = document.cookie
-          console.log('[LOGIN] 遷移前のCookie確認:', cookies)
-          
-          // 強制的にページを置き換え（履歴に残さない）
           window.location.replace(fullUrl)
-        }, 500)  // 500msに増加
+        }, 100)
       } else {
         ElMessage.error('ログインに失敗しました。メールアドレスとパスワードを確認してください。')
       }
@@ -168,8 +155,6 @@ const handleLogin = async () => {
 
 // ページロード時の初期化処理
 onMounted(() => {
-  // 必要に応じて初期化処理を追加
-  console.log('[LOGIN] ページがマウントされました')
   const { hideLoading } = useLoading()
   hideLoading()
 })

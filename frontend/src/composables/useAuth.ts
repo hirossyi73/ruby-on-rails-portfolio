@@ -43,13 +43,9 @@ export const useAuth = () => {
    * ログイン処理
    */
   const login = async (email: string, password: string) => {
-    console.log('[AUTH] ログイン処理開始')
-    console.log('[AUTH] email:', email)
-
     const api = useApi()
 
     try {
-      console.log('[AUTH] OAuth API呼び出し開始')
       const data = (await api.post('/api/oauth/token', {
         grant_type: 'password',
         username: email,
@@ -62,35 +58,22 @@ export const useAuth = () => {
         user?: User
       }
 
-      console.log('[AUTH] OAuth API応答受信')
-      console.log('[AUTH] access_token:', !!data.access_token)
-      console.log('[AUTH] refresh_token:', !!data.refresh_token)
-      console.log('[AUTH] user:', data.user)
-
       // Cookieに保存（SSR/CSR両対応）
       accessToken.value = data.access_token
       if (data.refresh_token) {
         refreshToken.value = data.refresh_token
       }
 
-      console.log('[AUTH] Cookie保存完了')
-
       // アクセストークンでユーザー情報を取得
-      console.log('[AUTH] ユーザー情報取得開始')
       try {
         const userInfo = await api.get('/api/auth/me', {
           token: data.access_token,
         })
 
-        console.log('[AUTH] ユーザー情報取得成功:', userInfo)
         userCookie.value = userInfo
       } catch (userError) {
-        console.log('[AUTH] ユーザー情報取得失敗:', userError)
         // ユーザー情報取得に失敗しても、ログイン自体は成功とする
       }
-
-      console.log('[AUTH] accessToken.value:', !!accessToken.value)
-      console.log('[AUTH] userCookie.value:', userCookie.value)
 
       return { success: true, user: userCookie.value }
     } catch (error) {
@@ -146,12 +129,8 @@ export const useAuth = () => {
    * 認証確認（SSR対応）
    */
   const checkAuth = async () => {
-    console.log('[AUTH] checkAuth開始')
-    console.log('[AUTH] accessToken.value:', !!accessToken.value)
-
     // トークンがない場合は未認証
     if (!accessToken.value) {
-      console.log('[AUTH] アクセストークンなし - 未認証')
       return false
     }
 
