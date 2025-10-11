@@ -82,8 +82,11 @@ services:
 
 volumes:
   mysql_data:
+    driver: local
   bundle_cache:
+    driver: local
   node_modules:
+    driver: local
 
 networks:
   nuxt-railsapi-network:
