@@ -2,6 +2,7 @@ services:
   backend:
     environment:
       RAILS_ENV: production
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
 
   frontend:
     build:
