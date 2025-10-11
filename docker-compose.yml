@@ -12,6 +12,8 @@ services:
       - backend
     networks:
       - nuxt-railsapi-network
+    environment:
+      WEB_DOMAIN: ${WEB_DOMAIN:-localhost}
 
   # MySQL データベース
   db:
