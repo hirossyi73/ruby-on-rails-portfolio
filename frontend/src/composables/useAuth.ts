@@ -77,7 +77,6 @@ export const useAuth = () => {
 
       return { success: true, user: userCookie.value }
     } catch (error) {
-      console.log('[AUTH] ログイン失敗:', error)
       return { success: false, error }
     }
   }
@@ -136,31 +135,20 @@ export const useAuth = () => {
 
     // SSR時はサーバーAPIで検証
     try {
-      console.log('[AUTH] サーバーAPIでユーザー情報を確認中...')
-
       // Nitroのイベントハンドラーを使用してサーバーAPIを呼び出す
       const api = useApi()
       const data = await api.get('/api/auth/me')
 
-      console.log('[AUTH] API応答:', data)
-
       // ユーザー情報をCookieに保存
       if (data && data.id) {
         userCookie.value = data
-        console.log('[AUTH] ユーザー情報をCookieに保存:', data)
       }
 
       const isValid = data && data.id
-      console.log('[AUTH] 認証結果:', isValid)
       return isValid
     } catch (error) {
-      console.log('[AUTH] API呼び出しエラー:', error)
       return false
     }
-
-    // CSR時はトークンの存在のみで判定（APIコールは不要）
-    console.log('[AUTH] CSR時 - トークン存在による認証')
-    return true
   }
 
   return {

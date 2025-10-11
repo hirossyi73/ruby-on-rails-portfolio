@@ -266,9 +266,6 @@ const openGithub = () => {
 
 // ページロード時にAPI状態を確認
 onMounted(async () => {
-  // eslint-disable-next-line no-console
-  console.log('Indexページが読み込まれました')
-
   const { hideLoading } = useLoading()
   // ページ読み込み完了後にローディング解除
   hideLoading()
