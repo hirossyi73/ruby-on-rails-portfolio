@@ -16,7 +16,8 @@ export const useAuth = () => {
   const cookieOptions = {
     maxAge: 60 * 60 * 24 * 7, // 7日間
     sameSite: 'lax' as const,
-    secure: process.env.NODE_ENV === 'production',
+    //secure: process.env.NODE_ENV === 'production',
+    secure: false, // 一旦falseにする
     path: '/',
   }
 
@@ -73,14 +74,14 @@ export const useAuth = () => {
       }
 
       console.log('[AUTH] Cookie保存完了')
-      
+
       // アクセストークンでユーザー情報を取得
       console.log('[AUTH] ユーザー情報取得開始')
       try {
-        const userInfo = await api.get('/api/auth/me', { 
-          token: data.access_token 
+        const userInfo = await api.get('/api/auth/me', {
+          token: data.access_token,
         })
-        
+
         console.log('[AUTH] ユーザー情報取得成功:', userInfo)
         userCookie.value = userInfo
       } catch (userError) {
