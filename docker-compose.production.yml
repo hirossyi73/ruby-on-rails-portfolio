@@ -4,5 +4,11 @@ services:
       RAILS_ENV: production
 
   frontend:
+    build:
+      args:
+        NODE_ENV: production
     environment:
       NODE_ENV: production
+      NUXT_PUBLIC_API_BASE_URL: ${NUXT_PUBLIC_API_BASE_URL:-http://localhost:80}
+      NUXT_PUBLIC_OAUTH_CLIENT_ID: ${NUXT_PUBLIC_OAUTH_CLIENT_ID}
+      NUXT_PUBLIC_OAUTH_CLIENT_SECRET: ${NUXT_PUBLIC_OAUTH_CLIENT_SECRET}
