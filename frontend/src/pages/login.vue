@@ -132,7 +132,22 @@ const handleLogin = async () => {
         // リダイレクト先があればそこへ、なければTODOページへ
         const route = useRoute()
         const redirectPath = (route.query.redirect as string) || '/todos'
-        await navigateTo(redirectPath)
+        
+        // ログイン処理完了後、リダイレクト前のログ（CSR）
+        console.log('[LOGIN] ログイン処理完了 - リダイレクト前')
+        console.log('[LOGIN] リダイレクト先:', redirectPath)
+        console.log('[LOGIN] ログイン結果:', result)
+        console.log('[LOGIN] 現在のルート:', route.fullPath)
+        console.log('[LOGIN] process.client:', process.client)
+        console.log('[LOGIN] process.server:', process.server)
+        
+        try {
+          await navigateTo(redirectPath)
+          // リダイレクト後のログ
+          console.log('[LOGIN] navigateTo実行完了 - 成功')
+        } catch (error) {
+          console.log('[LOGIN] navigateTo実行エラー:', error)
+        }
       } else {
         ElMessage.error('ログインに失敗しました。メールアドレスとパスワードを確認してください。')
       }

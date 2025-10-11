@@ -42,9 +42,15 @@ export const useAuth = () => {
    * ログイン処理
    */
   const login = async (email: string, password: string) => {
+    console.log('[AUTH] ログイン処理開始')
+    console.log('[AUTH] email:', email)
+    console.log('[AUTH] process.server:', process.server)
+    console.log('[AUTH] process.client:', process.client)
+    
     const api = useApi()
 
     try {
+      console.log('[AUTH] OAuth API呼び出し開始')
       const data = (await api.post('/api/oauth/token', {
         grant_type: 'password',
         username: email,
@@ -57,6 +63,11 @@ export const useAuth = () => {
         user?: User
       }
 
+      console.log('[AUTH] OAuth API応答受信')
+      console.log('[AUTH] access_token:', !!data.access_token)
+      console.log('[AUTH] refresh_token:', !!data.refresh_token)
+      console.log('[AUTH] user:', data.user)
+
       // Cookieに保存（SSR/CSR両対応）
       accessToken.value = data.access_token
       if (data.refresh_token) {
@@ -66,8 +77,13 @@ export const useAuth = () => {
         userCookie.value = data.user
       }
 
+      console.log('[AUTH] Cookie保存完了')
+      console.log('[AUTH] accessToken.value:', !!accessToken.value)
+      console.log('[AUTH] userCookie.value:', userCookie.value)
+
       return { success: true, user: data.user }
     } catch (error) {
+      console.log('[AUTH] ログイン失敗:', error)
       return { success: false, error }
     }
   }
@@ -119,28 +135,43 @@ export const useAuth = () => {
    * 認証確認（SSR対応）
    */
   const checkAuth = async () => {
+    console.log('[AUTH] checkAuth開始')
+    console.log('[AUTH] process.server:', process.server)
+    console.log('[AUTH] process.client:', process.client)
+    console.log('[AUTH] accessToken.value:', !!accessToken.value)
+    
     // トークンがない場合は未認証
     if (!accessToken.value) {
+      console.log('[AUTH] アクセストークンなし - 未認証')
       return false
     }
 
     // SSR時はサーバーAPIで検証
     try {
+      console.log('[AUTH] サーバーAPIでユーザー情報を確認中...')
+      
       // Nitroのイベントハンドラーを使用してサーバーAPIを呼び出す
       const api = useApi()
       const data = await api.get('/api/auth/me')
+      
+      console.log('[AUTH] API応答:', data)
 
       // ユーザー情報をCookieに保存
       if (data && data.id) {
         userCookie.value = data
+        console.log('[AUTH] ユーザー情報をCookieに保存:', data)
       }
 
-      return data && data.id
+      const isValid = data && data.id
+      console.log('[AUTH] 認証結果:', isValid)
+      return isValid
     } catch (error) {
+      console.log('[AUTH] API呼び出しエラー:', error)
       return false
     }
 
     // CSR時はトークンの存在のみで判定（APIコールは不要）
+    console.log('[AUTH] CSR時 - トークン存在による認証')
     return true
   }
 
