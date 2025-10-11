@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { Lock, User, Right, HomeFilled } from '@element-plus/icons-vue'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 
@@ -133,21 +133,14 @@ const handleLogin = async () => {
         const route = useRoute()
         const redirectPath = (route.query.redirect as string) || '/todos'
         
-        // ログイン処理完了後、リダイレクト前のログ（CSR）
         console.log('[LOGIN] ログイン処理完了 - リダイレクト前')
         console.log('[LOGIN] リダイレクト先:', redirectPath)
         console.log('[LOGIN] ログイン結果:', result)
         console.log('[LOGIN] 現在のルート:', route.fullPath)
-        console.log('[LOGIN] process.client:', process.client)
-        console.log('[LOGIN] process.server:', process.server)
         
-        try {
-          await navigateTo(redirectPath)
-          // リダイレクト後のログ
-          console.log('[LOGIN] navigateTo実行完了 - 成功')
-        } catch (error) {
-          console.log('[LOGIN] navigateTo実行エラー:', error)
-        }
+        // 確実なページ遷移のためwindow.location.hrefを使用
+        console.log('[LOGIN] window.location.hrefでページ遷移実行')
+        window.location.href = redirectPath
       } else {
         ElMessage.error('ログインに失敗しました。メールアドレスとパスワードを確認してください。')
       }
@@ -159,10 +152,10 @@ const handleLogin = async () => {
   })
 }
 
-// ページロード時にローディング解除
+// ページロード時の初期化処理
 onMounted(() => {
-  const { hideLoading } = useLoading()
-  hideLoading()
+  // 必要に応じて初期化処理を追加
+  console.log('[LOGIN] ページがマウントされました')
 })
 </script>
 
