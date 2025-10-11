@@ -77,6 +77,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { Lock, User, Right, HomeFilled } from '@element-plus/icons-vue'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
+import { useLoading } from '~/composables/useLoading'
 
 // ページメタデータ
 useHead({
@@ -156,6 +157,8 @@ const handleLogin = async () => {
 onMounted(() => {
   // 必要に応じて初期化処理を追加
   console.log('[LOGIN] ページがマウントされました')
+  const { hideLoading } = useLoading()
+  hideLoading()
 })
 </script>
 
