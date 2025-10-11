@@ -5,7 +5,7 @@ services:
     ports:
       - "${WEB_PORT:-80}:80"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf.template:ro
       - ./volumes/nginx_logs:/var/log/nginx
     depends_on:
       - frontend
