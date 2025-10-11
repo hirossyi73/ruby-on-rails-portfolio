@@ -1,0 +1,8 @@
+services:
+  backend:
+    environment:
+      RAILS_ENV: production
+
+  frontend:
+    environment:
+      NODE_ENV: production
