@@ -8,12 +8,13 @@
             <el-icon size="32" color="#409eff">
               <Document />
             </el-icon>
-            <h1 class="text-2xl font-bold text-gray-900">
+            <h1 class="text-xl sm:text-2xl font-bold text-gray-900">
               TODO管理
             </h1>
           </div>
 
-          <div class="flex items-center space-x-4">
+          <!-- デスクトップサイズでのボタン表示 -->
+          <div class="hidden md:flex items-center space-x-4">
             <el-button type="primary" :loading="pending" @click="refreshTodos">
               <el-icon><Refresh /></el-icon>
               再読み込み
@@ -26,8 +27,55 @@
               </el-button>
             </NuxtLink>
           </div>
+
+          <!-- モバイルサイズでのハンバーガーメニューボタン -->
+          <div class="md:hidden">
+            <button
+              @click="isMenuOpen = !isMenuOpen"
+              class="flex items-center justify-center w-10 h-10 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+            >
+              <div class="hamburger-icon" :class="{ 'open': isMenuOpen }">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </button>
+          </div>
         </div>
       </div>
+
+      <!-- モバイルメニュー -->
+      <div
+        v-if="isMenuOpen"
+        class="md:hidden absolute top-16 left-0 right-0 bg-white border-b shadow-lg z-50"
+      >
+        <div class="px-4 py-4 space-y-3">
+          <el-button
+            type="primary"
+            :loading="pending"
+            @click="refreshTodos"
+            class="w-full justify-start"
+            size="large"
+          >
+            <el-icon><Refresh /></el-icon>
+            再読み込み
+          </el-button>
+
+          <NuxtLink to="/" class="block">
+            <el-button class="w-full justify-start" size="large">
+              <el-icon><HomeFilled /></el-icon>
+              ホーム
+            </el-button>
+          </NuxtLink>
+        </div>
+      </div>
+
+      <!-- モバイルメニューオーバーレイ -->
+      <div
+        v-if="isMenuOpen"
+        @click="isMenuOpen = false"
+        class="md:hidden fixed inset-0 bg-black bg-opacity-25 z-40"
+      ></div>
     </header>
 
     <!-- メインコンテンツ -->
@@ -100,7 +148,8 @@
               TODO一覧
             </span>
 
-            <div class="flex items-center space-x-4">
+            <!-- デスクトップサイズでのフィルター表示 -->
+            <div class="hidden md:flex items-center space-x-4">
               <!-- フィルター機能 -->
               <el-select v-model="filters.status" placeholder="ステータス" size="small" class="!w-32">
                 <el-option label="すべて" value="all" />
@@ -114,6 +163,50 @@
                 <el-option label="20" :value="20" />
                 <el-option label="50" :value="50" />
               </el-select>
+            </div>
+
+            <!-- モバイルサイズでのフィルターボタン -->
+            <div class="md:hidden">
+              <button
+                @click="isFilterMenuOpen = !isFilterMenuOpen"
+                class="flex items-center justify-center w-10 h-10 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+              >
+                <el-icon size="16">
+                  <Filter />
+                </el-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- モバイル用フィルターメニュー -->
+          <div
+            v-if="isFilterMenuOpen && isMobile"
+            class="mt-4 p-4 bg-gray-50 rounded-lg border"
+          >
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">ステータス</label>
+                <el-select v-model="filters.status" placeholder="ステータス" size="small" class="w-full">
+                  <el-option label="すべて" value="all" />
+                  <el-option label="完了" value="completed" />
+                  <el-option label="未完了" value="pending" />
+                </el-select>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">表示件数</label>
+                <el-select v-model="filters.per_page" size="small" class="w-full">
+                  <el-option label="10件" :value="10" />
+                  <el-option label="20件" :value="20" />
+                  <el-option label="50件" :value="50" />
+                </el-select>
+              </div>
+
+              <div class="flex justify-end">
+                <el-button size="small" @click="isFilterMenuOpen = false">
+                  閉じる
+                </el-button>
+              </div>
             </div>
           </div>
         </template>
@@ -183,7 +276,7 @@
                 </div>
 
                 <p
-                  v-if="todo.description"
+                  v-if="todo.description && !isMobile"
                   class="text-gray-600 ml-8 mb-3 leading-relaxed"
                   :class="{ 'line-through': todo.completed }"
                 >
@@ -204,7 +297,7 @@
                       {{ todo.completed ? '完了' : '未完了' }}
                     </el-tag>
 
-                    <span class="text-xs text-gray-400">ID: {{ todo.id }}</span>
+                    <span class="text-xs text-gray-400" v-show="!isMobile">ID: {{ todo.id }}</span>
                   </div>
 
                   <div class="flex items-center space-x-2">
@@ -227,7 +320,9 @@
 
       <!-- ページネーション -->
       <div v-if="pagination && pagination.total_pages > 1" class="flex justify-center mb-8">
+        <!-- デスクトップサイズ用ページネーション -->
         <el-pagination
+          v-show="!isMobile"
           :current-page="filters.page"
           :page-size="filters.per_page"
           :total="pagination.total_count"
@@ -238,6 +333,38 @@
           @current-change="handlePageChange"
           @size-change="handleSizeChange"
         />
+        
+        <!-- モバイルサイズ用ページネーション -->
+        <el-pagination
+          v-show="isMobile"
+          :current-page="filters.page"
+          :page-size="filters.per_page"
+          :total="pagination.total_count"
+          :page-sizes="[10, 20, 50]"
+          :small="true"
+          layout="prev, pager, next"
+          background
+          class="mobile-pagination"
+          @current-change="handlePageChange"
+          @size-change="handleSizeChange"
+        />
+      </div>
+
+      <!-- モバイル用ページ情報とサイズ選択 -->
+      <div v-if="pagination && pagination.total_pages > 1 && isMobile" class="flex flex-col items-center mb-6 space-y-3">
+        <div class="text-sm text-gray-600 text-center">
+          {{ pagination.total_count }}件中 {{ ((filters.page - 1) * filters.per_page) + 1 }} - 
+          {{ Math.min(filters.page * filters.per_page, pagination.total_count) }}件を表示
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <span class="text-sm text-gray-600">表示件数:</span>
+          <el-select v-model="filters.per_page" size="small" class="!w-20">
+            <el-option label="10" :value="10" />
+            <el-option label="20" :value="20" />
+            <el-option label="50" :value="50" />
+          </el-select>
+        </div>
       </div>
 
       <!-- 追加のアクション -->
@@ -264,7 +391,8 @@ import {
   List,
   Plus,
   Edit,
-  Delete
+  Delete,
+  Filter
 } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
@@ -318,6 +446,9 @@ const todos = ref<Todo[]>([])
 const pagination = ref<Pagination | null>(null)
 const pending = ref(false)
 const error = ref<string | null>(null)
+const isMenuOpen = ref(false)
+const isFilterMenuOpen = ref(false)
+const windowWidth = ref(0)
 
 // フィルター設定
 const filters = ref<TodoFilters>({
@@ -358,6 +489,7 @@ const fetchTodos = async () => {
 // 再読み込み関数
 const refreshTodos = () => {
   ElMessage.info('TODOリストを更新しています...')
+  isMenuOpen.value = false // モバイルメニューを閉じる
   fetchTodos()
 }
 
@@ -444,9 +576,19 @@ const filteredTodos = computed(() => {
   return todos.value
 })
 
+const isMobile = computed(() => windowWidth.value < 768)
+
 // ページ読み込み時にTODOを取得
 onMounted(async () => {
   const { hideLoading } = useLoading()
+
+  // ウィンドウサイズの初期化
+  if (typeof window !== 'undefined') {
+    windowWidth.value = window.innerWidth
+    window.addEventListener('resize', () => {
+      windowWidth.value = window.innerWidth
+    })
+  }
 
   try {
     await fetchTodos()
@@ -458,6 +600,7 @@ onMounted(async () => {
 
 // フィルター変更時に自動でリフレッシュ
 watch(filters, () => {
+  isFilterMenuOpen.value = false // フィルター変更時にモバイルメニューを閉じる
   fetchTodos()
 }, { deep: true })
 </script>
@@ -492,5 +635,99 @@ watch(filters, () => {
 
 .todo-item {
   animation: slideInUp 0.4s ease-out;
+}
+
+/* ハンバーガーメニューのスタイル */
+.hamburger-icon {
+  width: 20px;
+  height: 16px;
+  position: relative;
+  cursor: pointer;
+}
+
+.hamburger-icon span {
+  display: block;
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  background: #374151;
+  border-radius: 1px;
+  opacity: 1;
+  left: 0;
+  transform: rotate(0deg);
+  transition: .25s ease-in-out;
+}
+
+.hamburger-icon span:nth-child(1) {
+  top: 0px;
+}
+
+.hamburger-icon span:nth-child(2) {
+  top: 7px;
+}
+
+.hamburger-icon span:nth-child(3) {
+  top: 14px;
+}
+
+.hamburger-icon.open span:nth-child(1) {
+  top: 7px;
+  transform: rotate(135deg);
+}
+
+.hamburger-icon.open span:nth-child(2) {
+  opacity: 0;
+  left: -60px;
+}
+
+.hamburger-icon.open span:nth-child(3) {
+  top: 7px;
+  transform: rotate(-135deg);
+}
+
+/* モバイルメニューのアニメーション */
+.mobile-menu {
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.mobile-menu.open {
+  transform: translateY(0);
+}
+
+/* モバイル用ページネーション */
+.mobile-pagination {
+  --el-pagination-font-size: 14px;
+  --el-pagination-button-width: 32px;
+  --el-pagination-button-height: 32px;
+}
+
+.mobile-pagination .el-pager .number {
+  min-width: 32px;
+  height: 32px;
+  line-height: 32px;
+  font-size: 14px;
+}
+
+.mobile-pagination .btn-prev,
+.mobile-pagination .btn-next {
+  min-width: 32px;
+  height: 32px;
+  line-height: 32px;
+  font-size: 12px;
+}
+
+/* モバイルでのボタン間隔調整 */
+@media (max-width: 640px) {
+  .mobile-pagination .el-pager {
+    gap: 2px;
+  }
+  
+  .mobile-pagination .el-pager .number {
+    min-width: 28px;
+    height: 28px;
+    line-height: 28px;
+    font-size: 12px;
+  }
 }
 </style>
