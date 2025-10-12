@@ -1,13 +1,13 @@
 <template>
   <div>
     <!-- フォームセクション -->
-    <el-card shadow="always" class="mb-6">
+    <el-card shadow="always" :class="isMobile ? 'mb-4' : 'mb-6'">
       <template #header>
         <div class="flex items-center">
           <el-icon class="mr-2" color="#409eff">
             <EditPen />
           </el-icon>
-          <span class="text-lg font-semibold text-gray-800">
+          <span :class="isMobile ? 'text-base' : 'text-lg'" class="font-semibold text-gray-800">
             {{ isEdit ? 'TODO編集' : 'TODO詳細情報' }}
           </span>
         </div>
@@ -17,7 +17,8 @@
         ref="formRef"
         :model="formData"
         :rules="formRules"
-        label-width="120px"
+        :label-width="isMobile ? '100%' : '120px'"
+        :label-position="isMobile ? 'top' : 'right'"
         size="large"
         @submit.prevent="handleSubmit"
       >
@@ -61,10 +62,11 @@
         </el-form-item>
 
         <el-form-item>
-          <div class="flex space-x-4">
+          <div class="responsive-form-buttons">
             <el-button
               type="primary"
               size="large"
+              :class="isMobile ? 'w-full' : ''"
               :loading="isSubmitting"
               @click="handleSubmit"
             >
@@ -74,6 +76,7 @@
 
             <el-button
               size="large"
+              :class="isMobile ? 'w-full' : ''"
               @click="handleCancel"
             >
               <el-icon><Close /></el-icon>
@@ -85,83 +88,55 @@
     </el-card>
 
     <!-- プレビューセクション -->
-    <el-card v-if="formData.title" shadow="hover" class="mb-6">
+    <el-card v-if="formData.title" shadow="hover" :class="isMobile ? 'mb-4' : 'mb-6'">
       <template #header>
         <div class="flex items-center">
           <el-icon class="mr-2" color="#67c23a">
             <View />
           </el-icon>
-          <span class="text-lg font-semibold text-gray-800">
+          <span :class="isMobile ? 'text-base' : 'text-lg'" class="font-semibold text-gray-800">
             プレビュー
           </span>
         </div>
       </template>
 
-      <div class="border border-gray-200 rounded-lg p-4 bg-white">
-        <div class="flex items-start justify-between">
-          <div class="flex-1">
-            <div class="flex items-center space-x-3 mb-2">
-              <el-checkbox
-                :model-value="formData.completed"
-                size="large"
-                disabled
-              />
-
-              <h3
-                class="text-lg font-medium"
-                :class="{
-                  'line-through text-gray-500': formData.completed,
-                  'text-gray-900': !formData.completed
-                }"
-              >
-                {{ formData.title }}
-              </h3>
-            </div>
-
-            <p
-              v-if="formData.description"
-              class="text-gray-600 ml-8 mb-3 leading-relaxed"
-              :class="{ 'line-through': formData.completed }"
-            >
-              {{ formData.description }}
-            </p>
-
-            <div class="flex items-center space-x-4 ml-8">
-              <el-tag
-                :type="formData.completed ? 'success' : 'warning'"
-                size="small"
-                effect="light"
-              >
-                <el-icon class="mr-1">
-                  <CircleCheck v-if="formData.completed" />
-                  <Clock v-else />
-                </el-icon>
-                {{ formData.completed ? '完了' : '未完了' }}
-              </el-tag>
-              
-              <span v-if="isEdit && todoId" class="text-xs text-gray-400">
-                ID: {{ todoId }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <TodoItem
+        :todo="previewTodo"
+        :show-actions="false"
+        :allow-toggle="false"
+        :allow-edit="false"
+        :allow-delete="false"
+        :is-mobile="isMobile"
+      />
     </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, onMounted, computed } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import {
   EditPen,
-  Clock,
-  CircleCheck,
   Check,
   Close,
   View
 } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+import TodoItem from './TodoItem.vue'
+
+// モバイル判定
+const windowWidth = ref(0)
+const isMobile = computed(() => windowWidth.value < 768)
+
+// プレビュー用のTODOオブジェクト
+const previewTodo = computed(() => ({
+  id: props.todoId || 0,
+  title: formData.title,
+  description: formData.description || undefined,
+  completed: formData.completed,
+  created_at: undefined,
+  updated_at: undefined
+}))
 
 // 型定義
 interface TodoFormData {
@@ -289,6 +264,16 @@ defineExpose({
   resetForm,
   validateForm,
   formData
+})
+
+// ウィンドウサイズの監視
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    windowWidth.value = window.innerWidth
+    window.addEventListener('resize', () => {
+      windowWidth.value = window.innerWidth
+    })
+  }
 })
 </script>
 

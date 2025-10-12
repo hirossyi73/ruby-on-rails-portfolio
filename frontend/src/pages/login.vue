@@ -74,9 +74,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { Lock, User, Right, HomeFilled } from '@element-plus/icons-vue'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
+import { useLoading } from '~/composables/useLoading'
 
 // ページメタデータ
 useHead({
@@ -132,7 +133,15 @@ const handleLogin = async () => {
         // リダイレクト先があればそこへ、なければTODOページへ
         const route = useRoute()
         const redirectPath = (route.query.redirect as string) || '/todos'
-        await navigateTo(redirectPath)
+        
+        // 絶対URLを構築
+        const baseUrl = window.location.origin
+        const fullUrl = baseUrl + redirectPath
+        
+        // 確実なページ遷移のため少し遅延を設定
+        setTimeout(() => {
+          window.location.replace(fullUrl)
+        }, 100)
       } else {
         ElMessage.error('ログインに失敗しました。メールアドレスとパスワードを確認してください。')
       }
@@ -144,7 +153,7 @@ const handleLogin = async () => {
   })
 }
 
-// ページロード時にローディング解除
+// ページロード時の初期化処理
 onMounted(() => {
   const { hideLoading } = useLoading()
   hideLoading()

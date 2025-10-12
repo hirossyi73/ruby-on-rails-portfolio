@@ -1,6 +1,10 @@
 # Node.js 20を使用（標準版でネイティブバインディング対応）
 FROM node:20
 
+# 環境変数を取得
+ARG NODE_ENV=development
+RUN echo "NODE_ENV is set to: $NODE_ENV"
+
 # 作業ディレクトリを設定
 WORKDIR /app
 

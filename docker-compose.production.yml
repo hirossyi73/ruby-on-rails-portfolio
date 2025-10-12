@@ -1,0 +1,46 @@
+services:
+  # Nginx リバースプロキシ
+  nginx:
+    volumes:
+      - certbot_files:/app/certbot:ro
+      - ./volumes/ssl:/etc/letsencrypt:ro
+    ports:
+      - '${PORT_IRODE_CHECK_HTTP:-80}:80'
+      - '${PORT_IRODE_CHECK_HTTPS:-443}:443'
+
+  backend:
+    environment:
+      #RAILS_ENV: production
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+
+  frontend:
+    build:
+      args:
+        NODE_ENV: production
+    environment:
+      NODE_ENV: production
+
+  # certbotサービス(証明書の自動更新用)
+  certbot:
+    image: certbot/certbot
+    profiles:
+      - certbot  # プロファイルを追加して手動実行可能にする
+    volumes:
+      - ./volumes/ssl:/etc/letsencrypt
+      - ./volumes/ssl/certbot_logs:/var/log/letsencrypt
+      - certbot_files:/app/certbot
+    environment:
+      - WEB_DOMAIN=${WEB_DOMAIN:-test.example.org}
+      - CERTBOT_EMAIL=${CERTBOT_EMAIL:-test@example.com}
+    networks:
+      - nuxt-railsapi-network
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+    # デフォルトではコマンド待機状態にする
+    command: tail -f /dev/null
+
+volumes:
+  certbot_files:
+    driver: local

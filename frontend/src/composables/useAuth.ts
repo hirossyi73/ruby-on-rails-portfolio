@@ -16,7 +16,8 @@ export const useAuth = () => {
   const cookieOptions = {
     maxAge: 60 * 60 * 24 * 7, // 7日間
     sameSite: 'lax' as const,
-    secure: process.env.NODE_ENV === 'production',
+    //secure: process.env.NODE_ENV === 'production',
+    secure: false, // 一旦falseにする
     path: '/',
   }
 
@@ -62,11 +63,19 @@ export const useAuth = () => {
       if (data.refresh_token) {
         refreshToken.value = data.refresh_token
       }
-      if (data.user) {
-        userCookie.value = data.user
+
+      // アクセストークンでユーザー情報を取得
+      try {
+        const userInfo = await api.get('/api/auth/me', {
+          token: data.access_token,
+        })
+
+        userCookie.value = userInfo
+      } catch (userError) {
+        // ユーザー情報取得に失敗しても、ログイン自体は成功とする
       }
 
-      return { success: true, user: data.user }
+      return { success: true, user: userCookie.value }
     } catch (error) {
       return { success: false, error }
     }
@@ -135,13 +144,11 @@ export const useAuth = () => {
         userCookie.value = data
       }
 
-      return data && data.id
+      const isValid = data && data.id
+      return isValid
     } catch (error) {
       return false
     }
-
-    // CSR時はトークンの存在のみで判定（APIコールは不要）
-    return true
   }
 
   return {

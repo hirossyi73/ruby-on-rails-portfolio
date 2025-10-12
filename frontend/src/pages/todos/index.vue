@@ -1,91 +1,33 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- ヘッダー -->
-    <header class="bg-white shadow-sm border-b">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-          <div class="flex items-center space-x-4">
-            <el-icon size="32" color="#409eff">
-              <Document />
-            </el-icon>
-            <h1 class="text-2xl font-bold text-gray-900">
-              TODO管理
-            </h1>
-          </div>
-
-          <div class="flex items-center space-x-4">
-            <el-button type="primary" :loading="pending" @click="refreshTodos">
-              <el-icon><Refresh /></el-icon>
-              再読み込み
-            </el-button>
-
-            <NuxtLink to="/">
-              <el-button>
-                <el-icon><HomeFilled /></el-icon>
-                ホーム
-              </el-button>
-            </NuxtLink>
-          </div>
-        </div>
-      </div>
-    </header>
+    <AppHeader
+      title="TODO管理"
+      icon="Document"
+      icon-color="#409eff"
+      :menu-items="headerMenuItems"
+      @menu-click="handleHeaderMenuClick"
+    />
 
     <!-- メインコンテンツ -->
     <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- 統計情報 -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <el-card shadow="hover" class="text-center">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8" v-if="!isMobile">
+        <el-card 
+          v-for="stat in statsCards" 
+          :key="stat.key"
+          shadow="hover" 
+          class="text-center"
+        >
           <div class="flex flex-col items-center">
-            <el-icon size="32" color="#409eff" class="mb-2">
-              <DataAnalysis />
+            <el-icon size="32" :color="stat.iconColor" class="mb-2">
+              <component :is="stat.icon" />
             </el-icon>
-            <div class="text-2xl font-bold text-gray-900">
-              {{ totalCount }}
+            <div class="text-2xl font-bold" :class="stat.textColor">
+              {{ stat.value }}
             </div>
             <div class="text-sm text-gray-500">
-              総数
-            </div>
-          </div>
-        </el-card>
-
-        <el-card shadow="hover" class="text-center">
-          <div class="flex flex-col items-center">
-            <el-icon size="32" color="#67c23a" class="mb-2">
-              <CircleCheck />
-            </el-icon>
-            <div class="text-2xl font-bold text-green-600">
-              {{ completedCount }}
-            </div>
-            <div class="text-sm text-gray-500">
-              完了
-            </div>
-          </div>
-        </el-card>
-
-        <el-card shadow="hover" class="text-center">
-          <div class="flex flex-col items-center">
-            <el-icon size="32" color="#e6a23c" class="mb-2">
-              <Clock />
-            </el-icon>
-            <div class="text-2xl font-bold text-yellow-600">
-              {{ pendingCount }}
-            </div>
-            <div class="text-sm text-gray-500">
-              未完了
-            </div>
-          </div>
-        </el-card>
-
-        <el-card shadow="hover" class="text-center">
-          <div class="flex flex-col items-center">
-            <el-icon size="32" color="#909399" class="mb-2">
-              <Files />
-            </el-icon>
-            <div class="text-2xl font-bold text-gray-600">
-              {{ todos.length }}
-            </div>
-            <div class="text-sm text-gray-500">
-              表示中
+              {{ stat.label }}
             </div>
           </div>
         </el-card>
@@ -100,7 +42,8 @@
               TODO一覧
             </span>
 
-            <div class="flex items-center space-x-4">
+            <!-- デスクトップサイズでのフィルター表示 -->
+            <div class="hidden md:flex items-center space-x-4">
               <!-- フィルター機能 -->
               <el-select v-model="filters.status" placeholder="ステータス" size="small" class="!w-32">
                 <el-option label="すべて" value="all" />
@@ -114,6 +57,50 @@
                 <el-option label="20" :value="20" />
                 <el-option label="50" :value="50" />
               </el-select>
+            </div>
+
+            <!-- モバイルサイズでのフィルターボタン -->
+            <div class="md:hidden">
+              <button
+                @click="isFilterMenuOpen = !isFilterMenuOpen"
+                class="flex items-center justify-center w-10 h-10 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+              >
+                <el-icon size="16">
+                  <Filter />
+                </el-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- モバイル用フィルターメニュー -->
+          <div
+            v-if="isFilterMenuOpen && isMobile"
+            class="mt-4 p-4 bg-gray-50 rounded-lg border"
+          >
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">ステータス</label>
+                <el-select v-model="filters.status" placeholder="ステータス" size="small" class="w-full">
+                  <el-option label="すべて" value="all" />
+                  <el-option label="完了" value="completed" />
+                  <el-option label="未完了" value="pending" />
+                </el-select>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">表示件数</label>
+                <el-select v-model="filters.per_page" size="small" class="w-full">
+                  <el-option label="10件" :value="10" />
+                  <el-option label="20件" :value="20" />
+                  <el-option label="50件" :value="50" />
+                </el-select>
+              </div>
+
+              <div class="flex justify-end">
+                <el-button size="small" @click="isFilterMenuOpen = false">
+                  閉じる
+                </el-button>
+              </div>
             </div>
           </div>
         </template>
@@ -153,81 +140,27 @@
 
         <!-- TODOリスト -->
         <div v-else class="space-y-4">
-          <div
+          <TodoItem
             v-for="todo in filteredTodos"
             :key="todo.id"
-            class="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors duration-200"
-            :class="{
-              'bg-gray-50 opacity-75': todo.completed,
-              'bg-white': !todo.completed
-            }"
-          >
-            <div class="flex items-start justify-between">
-              <div class="flex-1">
-                <div class="flex items-center space-x-3 mb-2">
-                  <el-checkbox
-                    :model-value="todo.completed"
-                    size="large"
-                    @change="toggleTodoStatus(todo)"
-                  />
-
-                  <h3
-                    class="text-lg font-medium"
-                    :class="{
-                      'line-through text-gray-500': todo.completed,
-                      'text-gray-900': !todo.completed
-                    }"
-                  >
-                    {{ todo.title }}
-                  </h3>
-                </div>
-
-                <p
-                  v-if="todo.description"
-                  class="text-gray-600 ml-8 mb-3 leading-relaxed"
-                  :class="{ 'line-through': todo.completed }"
-                >
-                  {{ todo.description }}
-                </p>
-
-                <div class="flex items-center justify-between ml-8">
-                  <div class="flex items-center space-x-4">
-                    <el-tag
-                      :type="todo.completed ? 'success' : 'warning'"
-                      size="small"
-                      effect="light"
-                    >
-                      <el-icon class="mr-1">
-                        <CircleCheck v-if="todo.completed" />
-                        <Clock v-else />
-                      </el-icon>
-                      {{ todo.completed ? '完了' : '未完了' }}
-                    </el-tag>
-
-                    <span class="text-xs text-gray-400">ID: {{ todo.id }}</span>
-                  </div>
-
-                  <div class="flex items-center space-x-2">
-                    <el-button size="small" type="primary" text @click="editTodo(todo)">
-                      <el-icon><Edit /></el-icon>
-                      編集
-                    </el-button>
-
-                    <el-button size="small" type="danger" text @click="deleteTodo(todo)">
-                      <el-icon><Delete /></el-icon>
-                      削除
-                    </el-button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            :todo="todo"
+            :show-actions="true"
+            :allow-toggle="true"
+            :allow-edit="true"
+            :allow-delete="true"
+            :is-mobile="isMobile"
+            @toggle-status="toggleTodoStatus"
+            @edit="editTodo"
+            @delete="deleteTodo"
+          />
         </div>
       </el-card>
 
       <!-- ページネーション -->
       <div v-if="pagination && pagination.total_pages > 1" class="flex justify-center mb-8">
+        <!-- デスクトップサイズ用ページネーション -->
         <el-pagination
+          v-show="!isMobile"
           :current-page="filters.page"
           :page-size="filters.per_page"
           :total="pagination.total_count"
@@ -238,6 +171,38 @@
           @current-change="handlePageChange"
           @size-change="handleSizeChange"
         />
+        
+        <!-- モバイルサイズ用ページネーション -->
+        <el-pagination
+          v-show="isMobile"
+          :current-page="filters.page"
+          :page-size="filters.per_page"
+          :total="pagination.total_count"
+          :page-sizes="[10, 20, 50]"
+          :small="true"
+          layout="prev, pager, next"
+          background
+          class="mobile-pagination"
+          @current-change="handlePageChange"
+          @size-change="handleSizeChange"
+        />
+      </div>
+
+      <!-- モバイル用ページ情報とサイズ選択 -->
+      <div v-if="pagination && pagination.total_pages > 1 && isMobile" class="flex flex-col items-center mb-6 space-y-3">
+        <div class="text-sm text-gray-600 text-center">
+          {{ pagination.total_count }}件中 {{ ((filters.page - 1) * filters.per_page) + 1 }} - 
+          {{ Math.min(filters.page * filters.per_page, pagination.total_count) }}件を表示
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <span class="text-sm text-gray-600">表示件数:</span>
+          <el-select v-model="filters.per_page" size="small" class="!w-20">
+            <el-option label="10" :value="10" />
+            <el-option label="20" :value="20" />
+            <el-option label="50" :value="50" />
+          </el-select>
+        </div>
       </div>
 
       <!-- 追加のアクション -->
@@ -263,8 +228,7 @@ import {
   Files,
   List,
   Plus,
-  Edit,
-  Delete
+  Filter
 } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
@@ -299,7 +263,7 @@ interface TodoFilters {
 
 // ページのメタデータを設定
 useHead({
-  title: 'TODO一覧 - Nuxt + Rails API',
+  title: 'TODO一覧 - Nuxt + Rails API ポートフォリオ',
   meta: [
     {
       name: 'description',
@@ -318,6 +282,8 @@ const todos = ref<Todo[]>([])
 const pagination = ref<Pagination | null>(null)
 const pending = ref(false)
 const error = ref<string | null>(null)
+const isFilterMenuOpen = ref(false)
+const windowWidth = ref(0)
 
 // フィルター設定
 const filters = ref<TodoFilters>({
@@ -444,9 +410,86 @@ const filteredTodos = computed(() => {
   return todos.value
 })
 
+const isMobile = computed(() => windowWidth.value < 768)
+
+// 統計カードの設定
+const statsCards = computed(() => [
+  {
+    key: 'total',
+    icon: DataAnalysis,
+    iconColor: '#409eff',
+    textColor: 'text-gray-900',
+    value: totalCount.value,
+    label: '総数'
+  },
+  {
+    key: 'completed',
+    icon: CircleCheck,
+    iconColor: '#67c23a',
+    textColor: 'text-green-600',
+    value: completedCount.value,
+    label: '完了'
+  },
+  {
+    key: 'pending',
+    icon: Clock,
+    iconColor: '#e6a23c',
+    textColor: 'text-yellow-600',
+    value: pendingCount.value,
+    label: '未完了'
+  },
+  {
+    key: 'displayed',
+    icon: Files,
+    iconColor: '#909399',
+    textColor: 'text-gray-600',
+    value: todos.value.length,
+    label: '表示中'
+  }
+])
+
+// ヘッダーメニューの設定
+const headerMenuItems = computed(() => [
+  {
+    label: '再読み込み',
+    icon: 'Refresh',
+    props: {
+      type: 'primary',
+      loading: pending.value
+    },
+    action: 'refresh'
+  },
+  {
+    label: 'ホーム',
+    icon: 'HomeFilled',
+    component: 'NuxtLink',
+    props: {
+      to: '/',
+      buttonProps: {}
+    },
+    action: 'home'
+  }
+])
+
+// ヘッダーメニューのクリックハンドラー
+const handleHeaderMenuClick = (item: any, event: Event) => {
+  if (item.action === 'refresh') {
+    refreshTodos()
+  }
+  // NuxtLinkの場合は自動でナビゲーションされる
+}
+
 // ページ読み込み時にTODOを取得
 onMounted(async () => {
   const { hideLoading } = useLoading()
+
+  // ウィンドウサイズの初期化
+  if (typeof window !== 'undefined') {
+    windowWidth.value = window.innerWidth
+    window.addEventListener('resize', () => {
+      windowWidth.value = window.innerWidth
+    })
+  }
 
   try {
     await fetchTodos()
@@ -458,6 +501,7 @@ onMounted(async () => {
 
 // フィルター変更時に自動でリフレッシュ
 watch(filters, () => {
+  isFilterMenuOpen.value = false // フィルター変更時にモバイルメニューを閉じる
   fetchTodos()
 }, { deep: true })
 </script>
@@ -472,25 +516,39 @@ watch(filters, () => {
   --el-card-border-color: #409eff;
 }
 
-/* チェックボックスのカスタマイズ */
-.el-checkbox {
-  --el-checkbox-checked-bg-color: #67c23a;
-  --el-checkbox-checked-border-color: #67c23a;
+/* モバイル用ページネーション */
+.mobile-pagination {
+  --el-pagination-font-size: 14px;
+  --el-pagination-button-width: 32px;
+  --el-pagination-button-height: 32px;
 }
 
-/* アニメーション効果 */
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.mobile-pagination .el-pager .number {
+  min-width: 32px;
+  height: 32px;
+  line-height: 32px;
+  font-size: 14px;
 }
 
-.todo-item {
-  animation: slideInUp 0.4s ease-out;
+.mobile-pagination .btn-prev,
+.mobile-pagination .btn-next {
+  min-width: 32px;
+  height: 32px;
+  line-height: 32px;
+  font-size: 12px;
+}
+
+/* モバイルでのボタン間隔調整 */
+@media (max-width: 640px) {
+  .mobile-pagination .el-pager {
+    gap: 2px;
+  }
+  
+  .mobile-pagination .el-pager .number {
+    min-width: 28px;
+    height: 28px;
+    line-height: 28px;
+    font-size: 12px;
+  }
 }
 </style>

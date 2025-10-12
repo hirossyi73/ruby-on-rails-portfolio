@@ -25,3 +25,43 @@
 .vue-railsapi-button-primary {
   @apply bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200;
 }
+
+/* モバイル用フォームボタンのスタイル 
+   使用方法: 
+   <div class="responsive-form-buttons">
+     <el-button>ボタン1</el-button>
+     <el-button>ボタン2</el-button>
+   </div>
+*/
+/* Element Plusのデフォルトmargin-leftを無効化 */
+@media (max-width: 767px) {
+  .responsive-form-buttons {
+    @apply w-full space-y-3;
+  }
+
+  .responsive-form-buttons .el-button {
+    @apply w-full;
+  }
+
+  .responsive-form-buttons .el-button + .el-button {
+    margin-left: 0 !important;
+  }
+}
+
+/* レスポンシブフォームボタンコンテナ 
+   モバイル: 縦積み、PCサイズ: 横並び
+   使用方法:
+   <div class="responsive-form-buttons">
+     <el-button>ボタン1</el-button>
+     <el-button>ボタン2</el-button>
+   </div>
+*/
+.responsive-form-buttons {
+  @apply space-y-3;
+}
+
+@media (min-width: 768px) {
+  .responsive-form-buttons {
+    @apply flex space-y-0 space-x-4;
+  }
+}

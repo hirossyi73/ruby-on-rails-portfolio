@@ -1,6 +1,9 @@
 # Environment variables
 .env
 
+# volumes
+volumes/
+
 # Docker volumes
 mysql_data/
 bundle_cache/
@@ -60,3 +63,6 @@ frontend/src/.env.*.local
 frontend/src/.nuxt/
 frontend/src/.output/
 frontend/src/dist/
+
+# nginx specific
+nginx/nginx.conf

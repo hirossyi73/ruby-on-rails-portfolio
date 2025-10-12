@@ -5,13 +5,18 @@ services:
     ports:
       - "${WEB_PORT:-80}:80"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf.template:ro
       - ./volumes/nginx_logs:/var/log/nginx
     depends_on:
       - frontend
       - backend
     networks:
       - nuxt-railsapi-network
+    environment:
+      WEB_DOMAIN: ${WEB_DOMAIN:-localhost}
+    command: >
+      sh -c "envsubst '$$WEB_DOMAIN' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+
 
   # MySQL データベース
   db:
@@ -49,7 +54,7 @@ services:
       DATABASE_PASSWORD: password
       DATABASE_NAME: nuxt_railsapi_development
       DATABASE_TEST_NAME: nuxt_railsapi_test
-      RAILS_ENV: ${RAILS_ENV:-development}
+      RAILS_ENV: development
       # OAuthのリダイレクト先設定のために追加
       WEB_DOMAIN: ${WEB_DOMAIN:-localhost}
     stdin_open: true
@@ -62,6 +67,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        NODE_ENV: development
     volumes:
       - node_modules:/app/node_modules
     expose:
@@ -69,7 +76,7 @@ services:
     depends_on:
       - backend
     environment:
-      NODE_ENV: ${NODE_ENV:-development}
+      NODE_ENV: development
       NUXT_PUBLIC_API_BASE_URL: ${NUXT_PUBLIC_API_BASE_URL:-http://localhost:80}
       NUXT_PUBLIC_OAUTH_CLIENT_ID: ${NUXT_PUBLIC_OAUTH_CLIENT_ID}
       NUXT_PUBLIC_OAUTH_CLIENT_SECRET: ${NUXT_PUBLIC_OAUTH_CLIENT_SECRET}
@@ -80,8 +87,11 @@ services:
 
 volumes:
   mysql_data:
+    driver: local
   bundle_cache:
+    driver: local
   node_modules:
+    driver: local
 
 networks:
   nuxt-railsapi-network:

@@ -1,20 +1,9 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
     <!-- ヘッダー -->
-    <header class="bg-white shadow-sm border-b">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-          <div class="flex items-center space-x-4">
-            <el-icon size="32" color="#409eff">
-              <Monitor />
-            </el-icon>
-            <h1 class="text-2xl font-bold text-gray-900">
-              Nuxt + Rails API
-            </h1>
-          </div>
-        </div>
-      </div>
-    </header>
+    <AppHeader
+      title="Nuxt + Rails API ポートフォリオ"
+    />
 
     <!-- メインコンテンツ -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -97,7 +86,7 @@
           アプリケーションを探索
         </h3>
 
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <div class="flex flex-col sm:flex-row gap-4 justify-center responsive-form-buttons">
           <el-button
             type="primary"
             size="large"
@@ -160,7 +149,7 @@ import { ElMessage } from 'element-plus'
 
 // ページのメタデータを設定
 useHead({
-  title: 'ホーム - Nuxt + Rails API',
+  title: 'ホーム - Nuxt + Rails API ポートフォリオ',
   meta: [
     {
       name: 'description',
@@ -273,9 +262,6 @@ const openGithub = () => {
 
 // ページロード時にAPI状態を確認
 onMounted(async () => {
-  // eslint-disable-next-line no-console
-  console.log('Indexページが読み込まれました')
-
   const { hideLoading } = useLoading()
   // ページ読み込み完了後にローディング解除
   hideLoading()
