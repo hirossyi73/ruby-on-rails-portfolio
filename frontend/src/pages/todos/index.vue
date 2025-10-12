@@ -81,59 +81,22 @@
     <!-- メインコンテンツ -->
     <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- 統計情報 -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <el-card shadow="hover" class="text-center">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8" v-if="!isMobile">
+        <el-card 
+          v-for="stat in statsCards" 
+          :key="stat.key"
+          shadow="hover" 
+          class="text-center"
+        >
           <div class="flex flex-col items-center">
-            <el-icon size="32" color="#409eff" class="mb-2">
-              <DataAnalysis />
+            <el-icon size="32" :color="stat.iconColor" class="mb-2">
+              <component :is="stat.icon" />
             </el-icon>
-            <div class="text-2xl font-bold text-gray-900">
-              {{ totalCount }}
+            <div class="text-2xl font-bold" :class="stat.textColor">
+              {{ stat.value }}
             </div>
             <div class="text-sm text-gray-500">
-              総数
-            </div>
-          </div>
-        </el-card>
-
-        <el-card shadow="hover" class="text-center">
-          <div class="flex flex-col items-center">
-            <el-icon size="32" color="#67c23a" class="mb-2">
-              <CircleCheck />
-            </el-icon>
-            <div class="text-2xl font-bold text-green-600">
-              {{ completedCount }}
-            </div>
-            <div class="text-sm text-gray-500">
-              完了
-            </div>
-          </div>
-        </el-card>
-
-        <el-card shadow="hover" class="text-center">
-          <div class="flex flex-col items-center">
-            <el-icon size="32" color="#e6a23c" class="mb-2">
-              <Clock />
-            </el-icon>
-            <div class="text-2xl font-bold text-yellow-600">
-              {{ pendingCount }}
-            </div>
-            <div class="text-sm text-gray-500">
-              未完了
-            </div>
-          </div>
-        </el-card>
-
-        <el-card shadow="hover" class="text-center">
-          <div class="flex flex-col items-center">
-            <el-icon size="32" color="#909399" class="mb-2">
-              <Files />
-            </el-icon>
-            <div class="text-2xl font-bold text-gray-600">
-              {{ todos.length }}
-            </div>
-            <div class="text-sm text-gray-500">
-              表示中
+              {{ stat.label }}
             </div>
           </div>
         </el-card>
@@ -577,6 +540,42 @@ const filteredTodos = computed(() => {
 })
 
 const isMobile = computed(() => windowWidth.value < 768)
+
+// 統計カードの設定
+const statsCards = computed(() => [
+  {
+    key: 'total',
+    icon: 'DataAnalysis',
+    iconColor: '#409eff',
+    textColor: 'text-gray-900',
+    value: totalCount.value,
+    label: '総数'
+  },
+  {
+    key: 'completed',
+    icon: 'CircleCheck',
+    iconColor: '#67c23a',
+    textColor: 'text-green-600',
+    value: completedCount.value,
+    label: '完了'
+  },
+  {
+    key: 'pending',
+    icon: 'Clock',
+    iconColor: '#e6a23c',
+    textColor: 'text-yellow-600',
+    value: pendingCount.value,
+    label: '未完了'
+  },
+  {
+    key: 'displayed',
+    icon: 'Files',
+    iconColor: '#909399',
+    textColor: 'text-gray-600',
+    value: todos.value.length,
+    label: '表示中'
+  }
+])
 
 // ページ読み込み時にTODOを取得
 onMounted(async () => {
