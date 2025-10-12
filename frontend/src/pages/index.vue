@@ -79,7 +79,7 @@
           アプリケーションを探索
         </h3>
 
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <div class="flex flex-col sm:flex-row gap-4 justify-center responsive-form-buttons">
           <el-button
             type="primary"
             size="large"

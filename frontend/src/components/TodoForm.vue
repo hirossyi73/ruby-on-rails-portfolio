@@ -1,13 +1,13 @@
 <template>
   <div>
     <!-- フォームセクション -->
-    <el-card shadow="always" class="mb-6">
+    <el-card shadow="always" :class="isMobile ? 'mb-4' : 'mb-6'">
       <template #header>
         <div class="flex items-center">
           <el-icon class="mr-2" color="#409eff">
             <EditPen />
           </el-icon>
-          <span class="text-lg font-semibold text-gray-800">
+          <span :class="isMobile ? 'text-base' : 'text-lg'" class="font-semibold text-gray-800">
             {{ isEdit ? 'TODO編集' : 'TODO詳細情報' }}
           </span>
         </div>
@@ -17,7 +17,8 @@
         ref="formRef"
         :model="formData"
         :rules="formRules"
-        label-width="120px"
+        :label-width="isMobile ? '100%' : '120px'"
+        :label-position="isMobile ? 'top' : 'right'"
         size="large"
         @submit.prevent="handleSubmit"
       >
@@ -61,10 +62,11 @@
         </el-form-item>
 
         <el-form-item>
-          <div class="flex space-x-4">
+          <div class="responsive-form-buttons">
             <el-button
               type="primary"
               size="large"
+              :class="isMobile ? 'w-full' : ''"
               :loading="isSubmitting"
               @click="handleSubmit"
             >
@@ -74,6 +76,7 @@
 
             <el-button
               size="large"
+              :class="isMobile ? 'w-full' : ''"
               @click="handleCancel"
             >
               <el-icon><Close /></el-icon>
@@ -85,51 +88,59 @@
     </el-card>
 
     <!-- プレビューセクション -->
-    <el-card v-if="formData.title" shadow="hover" class="mb-6">
+    <el-card v-if="formData.title" shadow="hover" :class="isMobile ? 'mb-4' : 'mb-6'">
       <template #header>
         <div class="flex items-center">
           <el-icon class="mr-2" color="#67c23a">
             <View />
           </el-icon>
-          <span class="text-lg font-semibold text-gray-800">
+          <span :class="isMobile ? 'text-base' : 'text-lg'" class="font-semibold text-gray-800">
             プレビュー
           </span>
         </div>
       </template>
 
-      <div class="border border-gray-200 rounded-lg p-4 bg-white">
+      <div :class="isMobile ? 'border border-gray-200 rounded-lg p-3 bg-white' : 'border border-gray-200 rounded-lg p-4 bg-white'">
         <div class="flex items-start justify-between">
           <div class="flex-1">
-            <div class="flex items-center space-x-3 mb-2">
+            <div :class="isMobile ? 'flex items-center space-x-2 mb-2' : 'flex items-center space-x-3 mb-2'">
               <el-checkbox
                 :model-value="formData.completed"
-                size="large"
+                :size="isMobile ? 'default' : 'large'"
                 disabled
               />
 
               <h3
-                class="text-lg font-medium"
-                :class="{
-                  'line-through text-gray-500': formData.completed,
-                  'text-gray-900': !formData.completed
-                }"
+                :class="[
+                  isMobile ? 'text-base' : 'text-lg',
+                  'font-medium',
+                  {
+                    'line-through text-gray-500': formData.completed,
+                    'text-gray-900': !formData.completed
+                  }
+                ]"
               >
                 {{ formData.title }}
               </h3>
             </div>
 
             <p
-              v-if="formData.description"
-              class="text-gray-600 ml-8 mb-3 leading-relaxed"
-              :class="{ 'line-through': formData.completed }"
+              v-if="formData.description && (!isMobile || formData.description.length < 100)"
+              :class="[
+                isMobile ? 'text-sm ml-6 mb-2' : 'text-gray-600 ml-8 mb-3',
+                'text-gray-600 leading-relaxed',
+                { 'line-through': formData.completed }
+              ]"
             >
-              {{ formData.description }}
+              {{ isMobile && formData.description.length > 100 
+                ? formData.description.substring(0, 100) + '...' 
+                : formData.description }}
             </p>
 
-            <div class="flex items-center space-x-4 ml-8">
+            <div :class="isMobile ? 'flex items-center space-x-2 ml-6' : 'flex items-center space-x-4 ml-8'">
               <el-tag
                 :type="formData.completed ? 'success' : 'warning'"
-                size="small"
+                :size="isMobile ? 'small' : 'small'"
                 effect="light"
               >
                 <el-icon class="mr-1">
@@ -139,7 +150,7 @@
                 {{ formData.completed ? '完了' : '未完了' }}
               </el-tag>
               
-              <span v-if="isEdit && todoId" class="text-xs text-gray-400">
+              <span v-if="isEdit && todoId && !isMobile" class="text-xs text-gray-400">
                 ID: {{ todoId }}
               </span>
             </div>
@@ -151,7 +162,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, onMounted, computed } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import {
   EditPen,
@@ -162,6 +173,10 @@ import {
   View
 } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+
+// モバイル判定
+const windowWidth = ref(0)
+const isMobile = computed(() => windowWidth.value < 768)
 
 // 型定義
 interface TodoFormData {
@@ -289,6 +304,16 @@ defineExpose({
   resetForm,
   validateForm,
   formData
+})
+
+// ウィンドウサイズの監視
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    windowWidth.value = window.innerWidth
+    window.addEventListener('resize', () => {
+      windowWidth.value = window.innerWidth
+    })
+  }
 })
 </script>
 
