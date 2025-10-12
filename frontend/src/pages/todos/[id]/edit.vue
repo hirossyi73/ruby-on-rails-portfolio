@@ -1,36 +1,13 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- ヘッダー -->
-    <header class="bg-white shadow-sm border-b">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-          <div class="flex items-center space-x-4">
-            <el-icon size="32" color="#e6a23c">
-              <Edit />
-            </el-icon>
-            <h1 class="text-2xl font-bold text-gray-900">
-              TODO編集
-            </h1>
-          </div>
-
-          <div class="flex items-center space-x-4">
-            <NuxtLink to="/todos">
-              <el-button>
-                <el-icon><ArrowLeft /></el-icon>
-                一覧に戻る
-              </el-button>
-            </NuxtLink>
-
-            <NuxtLink to="/">
-              <el-button>
-                <el-icon><HomeFilled /></el-icon>
-                ホーム
-              </el-button>
-            </NuxtLink>
-          </div>
-        </div>
-      </div>
-    </header>
+    <AppHeader
+      title="TODO編集"
+      icon="Edit"
+      icon-color="#e6a23c"
+      :menu-items="headerMenuItems"
+      @menu-click="handleHeaderMenuClick"
+    />
 
     <!-- メインコンテンツ -->
     <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -117,6 +94,35 @@ const todo = ref<Todo | null>(null)
 const pending = ref(false)
 const error = ref<string | null>(null)
 const isSubmitting = ref(false)
+
+// ヘッダーメニューの設定
+const headerMenuItems = [
+  {
+    label: '一覧に戻る',
+    icon: 'ArrowLeft',
+    component: 'NuxtLink',
+    props: {
+      to: '/todos',
+      buttonProps: {}
+    },
+    action: 'back'
+  },
+  {
+    label: 'ホーム',
+    icon: 'HomeFilled',
+    component: 'NuxtLink',
+    props: {
+      to: '/',
+      buttonProps: {}
+    },
+    action: 'home'
+  }
+]
+
+// ヘッダーメニューのクリックハンドラー
+const handleHeaderMenuClick = (item: any, event: Event) => {
+  // NuxtLinkの場合は自動でナビゲーションされる
+}
 
 // TODOを取得する関数
 const fetchTodo = async () => {

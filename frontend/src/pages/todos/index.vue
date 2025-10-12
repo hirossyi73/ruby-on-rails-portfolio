@@ -1,82 +1,13 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- ヘッダー -->
-    <header class="bg-white shadow-sm border-b">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-          <div class="flex items-center space-x-4">
-            <el-icon size="32" color="#409eff">
-              <Document />
-            </el-icon>
-            <h1 class="text-xl sm:text-2xl font-bold text-gray-900">
-              TODO管理
-            </h1>
-          </div>
-
-          <!-- デスクトップサイズでのボタン表示 -->
-          <div class="hidden md:flex items-center space-x-4">
-            <el-button type="primary" :loading="pending" @click="refreshTodos">
-              <el-icon><Refresh /></el-icon>
-              再読み込み
-            </el-button>
-
-            <NuxtLink to="/">
-              <el-button>
-                <el-icon><HomeFilled /></el-icon>
-                ホーム
-              </el-button>
-            </NuxtLink>
-          </div>
-
-          <!-- モバイルサイズでのハンバーガーメニューボタン -->
-          <div class="md:hidden">
-            <button
-              @click="isMenuOpen = !isMenuOpen"
-              class="flex items-center justify-center w-10 h-10 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-            >
-              <div class="hamburger-icon" :class="{ 'open': isMenuOpen }">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- モバイルメニュー -->
-      <div
-        v-if="isMenuOpen"
-        class="md:hidden absolute top-16 left-0 right-0 bg-white border-b shadow-lg z-50"
-      >
-        <div class="px-4 py-4 space-y-3">
-          <el-button
-            type="primary"
-            :loading="pending"
-            @click="refreshTodos"
-            class="w-full justify-start"
-            size="large"
-          >
-            <el-icon><Refresh /></el-icon>
-            再読み込み
-          </el-button>
-
-          <NuxtLink to="/" class="block">
-            <el-button class="w-full justify-start" size="large">
-              <el-icon><HomeFilled /></el-icon>
-              ホーム
-            </el-button>
-          </NuxtLink>
-        </div>
-      </div>
-
-      <!-- モバイルメニューオーバーレイ -->
-      <div
-        v-if="isMenuOpen"
-        @click="isMenuOpen = false"
-        class="md:hidden fixed inset-0 bg-black bg-opacity-25 z-40"
-      ></div>
-    </header>
+    <AppHeader
+      title="TODO管理"
+      icon="Document"
+      icon-color="#409eff"
+      :menu-items="headerMenuItems"
+      @menu-click="handleHeaderMenuClick"
+    />
 
     <!-- メインコンテンツ -->
     <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -409,7 +340,6 @@ const todos = ref<Todo[]>([])
 const pagination = ref<Pagination | null>(null)
 const pending = ref(false)
 const error = ref<string | null>(null)
-const isMenuOpen = ref(false)
 const isFilterMenuOpen = ref(false)
 const windowWidth = ref(0)
 
@@ -452,7 +382,6 @@ const fetchTodos = async () => {
 // 再読み込み関数
 const refreshTodos = () => {
   ElMessage.info('TODOリストを更新しています...')
-  isMenuOpen.value = false // モバイルメニューを閉じる
   fetchTodos()
 }
 
@@ -577,6 +506,37 @@ const statsCards = computed(() => [
   }
 ])
 
+// ヘッダーメニューの設定
+const headerMenuItems = computed(() => [
+  {
+    label: '再読み込み',
+    icon: 'Refresh',
+    props: {
+      type: 'primary',
+      loading: pending.value
+    },
+    action: 'refresh'
+  },
+  {
+    label: 'ホーム',
+    icon: 'HomeFilled',
+    component: 'NuxtLink',
+    props: {
+      to: '/',
+      buttonProps: {}
+    },
+    action: 'home'
+  }
+])
+
+// ヘッダーメニューのクリックハンドラー
+const handleHeaderMenuClick = (item: any, event: Event) => {
+  if (item.action === 'refresh') {
+    refreshTodos()
+  }
+  // NuxtLinkの場合は自動でナビゲーションされる
+}
+
 // ページ読み込み時にTODOを取得
 onMounted(async () => {
   const { hideLoading } = useLoading()
@@ -634,64 +594,6 @@ watch(filters, () => {
 
 .todo-item {
   animation: slideInUp 0.4s ease-out;
-}
-
-/* ハンバーガーメニューのスタイル */
-.hamburger-icon {
-  width: 20px;
-  height: 16px;
-  position: relative;
-  cursor: pointer;
-}
-
-.hamburger-icon span {
-  display: block;
-  position: absolute;
-  height: 2px;
-  width: 100%;
-  background: #374151;
-  border-radius: 1px;
-  opacity: 1;
-  left: 0;
-  transform: rotate(0deg);
-  transition: .25s ease-in-out;
-}
-
-.hamburger-icon span:nth-child(1) {
-  top: 0px;
-}
-
-.hamburger-icon span:nth-child(2) {
-  top: 7px;
-}
-
-.hamburger-icon span:nth-child(3) {
-  top: 14px;
-}
-
-.hamburger-icon.open span:nth-child(1) {
-  top: 7px;
-  transform: rotate(135deg);
-}
-
-.hamburger-icon.open span:nth-child(2) {
-  opacity: 0;
-  left: -60px;
-}
-
-.hamburger-icon.open span:nth-child(3) {
-  top: 7px;
-  transform: rotate(-135deg);
-}
-
-/* モバイルメニューのアニメーション */
-.mobile-menu {
-  transform: translateY(-100%);
-  transition: transform 0.3s ease-in-out;
-}
-
-.mobile-menu.open {
-  transform: translateY(0);
 }
 
 /* モバイル用ページネーション */

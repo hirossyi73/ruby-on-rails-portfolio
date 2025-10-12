@@ -1,20 +1,9 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
     <!-- ヘッダー -->
-    <header class="bg-white shadow-sm border-b">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-          <div class="flex items-center space-x-4">
-            <el-icon size="32" color="#409eff">
-              <Monitor />
-            </el-icon>
-            <h1 class="text-2xl font-bold text-gray-900">
-              Nuxt + Rails API
-            </h1>
-          </div>
-        </div>
-      </div>
-    </header>
+    <AppHeader
+      title="Nuxt + Rails API"
+    />
 
     <!-- メインコンテンツ -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
