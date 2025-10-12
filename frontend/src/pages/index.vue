@@ -46,6 +46,13 @@
         />
       </div>
 
+      <!-- 使用している技術 -->
+      <div class="text-center mb-4">
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">
+          【使用している技術】
+        </h3>
+      </div>
+
       <!-- 機能カード -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
         <el-card
@@ -170,21 +177,21 @@ const apiMessage = ref('')
 const features = reactive([
   {
     id: 1,
-    title: 'Nuxt.js',
-    description: 'Vue.jsベースのフルスタックフレームワーク。SSR、SPA、静的サイト生成をサポート。',
-    icon: markRaw(Platform),
-    color: '#41b883',
-    tagType: 'success',
-    technologies: ['Vue 3', 'TypeScript', 'SSR']
-  },
-  {
-    id: 2,
     title: 'Rails API',
     description: '高速で信頼性の高いバックエンドAPI。RESTful設計とJSON形式でのデータ交換。',
     icon: markRaw(Lightning),
     color: '#cc0000',
     tagType: 'danger',
     technologies: ['Ruby', 'MySQL', 'REST API']
+  },
+  {
+    id: 2,
+    title: 'Nuxt.js',
+    description: 'Vue.jsベースのフルスタックフレームワーク。フロントエンドとして採用しています。',
+    icon: markRaw(Platform),
+    color: '#41b883',
+    tagType: 'success',
+    technologies: ['Vue 3', 'TypeScript', 'SSR']
   },
   {
     id: 3,
