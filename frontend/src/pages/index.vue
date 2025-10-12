@@ -20,9 +20,8 @@
         </h2>
 
         <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">
-          Nuxt.js と Rails API を使用したモダンなフルスタックアプリケーションへようこそ！
-          <br>
-          Element Plus と Tailwind CSS でスタイリングされた美しいUIをお楽しみください。
+          Nuxt.js と Rails API を使用した、ポートフォリオアプリケーションへようこそ！
+          <br />このアプリケーション自身は、TODO管理といったシンプルなものですが、以下の技術を採用しています。
         </p>
 
         <el-alert
@@ -54,7 +53,8 @@
           <template #header>
             <div class="flex items-center space-x-3">
               <el-icon :size="24" :color="feature.color">
-                <component :is="feature.icon" />
+                <Icon v-if="feature.iconType === 'iconify'" :icon="feature.icon" width="1em" height="1em" />
+                <component v-else :is="feature.icon" />
               </el-icon>
               <span class="text-lg font-semibold text-gray-800">
                 {{ feature.title }}
@@ -82,7 +82,7 @@
 
       <!-- クイックアクション -->
       <div class="bg-white rounded-2xl shadow-lg p-8 text-center">
-        <h3 class="text-2xl font-bold text-gray-900 mb-6">
+        <h3 class="md:text-2xl text-xl font-bold text-gray-900 mb-6">
           アプリケーションを探索
         </h3>
 
@@ -146,6 +146,7 @@ import {
   Setting
 } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+import { Icon } from '@iconify/vue'
 
 // ページのメタデータを設定
 useHead({
@@ -167,57 +168,53 @@ const features = reactive([
   {
     id: 1,
     title: 'Rails API',
-    description: '高速で信頼性の高いバックエンドAPI。RESTful設計とJSON形式でのデータ交換。',
+    description: 'バックエンドAPIには、Ruby on Rails APIを採用。RESTful設計とJSON形式でのデータ交換しています。OAuth2による認証処理も実装しています。',
     icon: markRaw(Lightning),
+    iconType: 'element-plus',
     color: '#cc0000',
     tagType: 'danger',
-    technologies: ['Ruby', 'MySQL', 'REST API']
+    technologies: ['Ruby', 'Ruby on Rails', 'REST API', 'OAuth2']
   },
   {
     id: 2,
     title: 'Nuxt.js',
-    description: 'Vue.jsベースのフルスタックフレームワーク。フロントエンドとして採用しています。',
+    description: 'Vue.jsベースのフルスタックフレームワーク。フロントエンドとして採用しています。 SSR対応し、ミドルウェアで認証処理を行っています。',
     icon: markRaw(Platform),
+    iconType: 'element-plus',
     color: '#41b883',
     tagType: 'success',
-    technologies: ['Vue 3', 'TypeScript', 'SSR']
+    technologies: ['Nuxt.js', 'Vue 3', 'TypeScript', 'SSR']
   },
   {
     id: 3,
     title: 'Docker',
-    description: 'コンテナ化された開発環境。一貫性のある環境でチーム開発を効率化。',
+    description: '環境構築にDockerを採用しています。バックエンド・フロントエンド、DB、nginxをコンテナで分離し、Docker Composeで一括管理しています。certbotによるSSL化も実装。',
     icon: markRaw(Box),
+    iconType: 'element-plus',
     color: '#2496ed',
     tagType: 'primary',
-    technologies: ['Docker', 'Compose', 'Container']
+    technologies: ['Docker', 'Container', 'Certbot']
   },
   {
     id: 4,
     title: 'Element Plus',
-    description: 'Vue 3対応のUIコンポーネントライブラリ。美しく使いやすいインターフェース。',
+    description: 'Vue 3対応のUIコンポーネントライブラリ。美しく使いやすいインターフェースを使用し、開発効率を向上させています。',
     icon: markRaw(Star),
+    iconType: 'element-plus',
     color: '#409eff',
     tagType: 'primary',
-    technologies: ['Components', 'Theme', 'Icons']
+    technologies: ['Element Plus', 'Theme', 'Icons']
   },
   {
     id: 5,
-    title: 'Tailwind CSS',
-    description: 'ユーティリティファーストのCSSフレームワーク。高速でカスタマイズ可能。',
-    icon: markRaw(Setting),
+    title: 'AIエージェント開発',
+    description: 'AIエージェントを使用した開発支援を実施。GitHub CopilotやChatGPTを活用し、コード生成や問題解決を効率化しています。',
+    icon: 'mage:robot',
+    iconType: 'iconify',
     color: '#38bdf8',
     tagType: 'info',
-    technologies: ['Utility', 'Responsive', 'JIT']
+    technologies: ['AIエージェント', 'Copilot', 'ChatGPT']
   },
-  {
-    id: 6,
-    title: 'TypeScript',
-    description: '型安全なJavaScript開発。大規模アプリケーションの開発効率を向上。',
-    icon: markRaw(DataAnalysis),
-    color: '#3178c6',
-    tagType: 'primary',
-    technologies: ['Type Safety', 'IntelliSense', 'Refactoring']
-  }
 ])
 
 // 統計データ

@@ -11,26 +11,27 @@
     "type-check": "nuxt typecheck"
   },
   "dependencies": {
-    "nuxt": "^3.13.0",
-    "@pinia/nuxt": "^0.5.1",
-    "pinia": "^2.1.7",
-    "axios": "^1.6.0",
-    "@nuxtjs/tailwindcss": "^6.8.0",
-    "element-plus": "^2.4.0",
+    "@element-plus/icons-vue": "^2.1.0",
     "@element-plus/nuxt": "^1.0.0",
-    "@element-plus/icons-vue": "^2.1.0"
+    "@nuxtjs/tailwindcss": "^6.8.0",
+    "@pinia/nuxt": "^0.5.1",
+    "axios": "^1.6.0",
+    "element-plus": "^2.4.0",
+    "nuxt": "^3.13.0",
+    "pinia": "^2.1.7"
   },
   "devDependencies": {
+    "@iconify/vue": "^5.0.0",
     "@nuxt/devtools": "latest",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.35.0",
-    "typescript": "~5.2.0",
-    "tailwindcss": "^3.3.0",
     "autoprefixer": "^10.4.16",
-    "postcss": "^8.4.31"
+    "eslint": "^8.35.0",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.0",
+    "typescript": "~5.2.0"
   },
   "optionalDependencies": {
     "@oxc-parser/binding-linux-x64-gnu": "latest",
