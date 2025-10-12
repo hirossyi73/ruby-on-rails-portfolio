@@ -38,7 +38,7 @@ interface TodoFormData {
 
 // ページのメタデータを設定
 useHead({
-  title: 'TODO作成 - Nuxt + Rails API',
+  title: 'TODO作成 - Nuxt + Rails API ポートフォリオ',
   meta: [
     {
       name: 'description',

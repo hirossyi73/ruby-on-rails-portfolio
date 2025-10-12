@@ -3,7 +3,7 @@
     <header>
       <nav class="navbar">
         <div class="navbar-brand">
-          <h1>Nuxt + Rails API</h1>
+          <h1><NuxtLink to="/" @click="closeMenu">Nuxt + Rails API ポートフォリオ</NuxtLink></h1>
         </div>
         
         <!-- ハンバーガーメニューボタン（モバイル用） -->
@@ -55,7 +55,7 @@
     </main>
     
     <footer>
-      <p>&copy; 2025 Nuxt + Rails API プロジェクト</p>
+      <p>&copy; 2025 Nuxt + Rails API ポートフォリオ</p>
     </footer>
   </div>
 </template>

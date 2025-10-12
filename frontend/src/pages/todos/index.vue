@@ -263,7 +263,7 @@ interface TodoFilters {
 
 // ページのメタデータを設定
 useHead({
-  title: 'TODO一覧 - Nuxt + Rails API',
+  title: 'TODO一覧 - Nuxt + Rails API ポートフォリオ',
   meta: [
     {
       name: 'description',

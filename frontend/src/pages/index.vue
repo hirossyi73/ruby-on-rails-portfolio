@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
     <!-- ヘッダー -->
     <AppHeader
-      title="Nuxt + Rails API"
+      title="Nuxt + Rails API ポートフォリオ"
     />
 
     <!-- メインコンテンツ -->
@@ -142,7 +142,7 @@ import { ElMessage } from 'element-plus'
 
 // ページのメタデータを設定
 useHead({
-  title: 'ホーム - Nuxt + Rails API',
+  title: 'ホーム - Nuxt + Rails API ポートフォリオ',
   meta: [
     {
       name: 'description',
