@@ -416,7 +416,7 @@ const isMobile = computed(() => windowWidth.value < 768)
 const statsCards = computed(() => [
   {
     key: 'total',
-    icon: 'DataAnalysis',
+    icon: DataAnalysis,
     iconColor: '#409eff',
     textColor: 'text-gray-900',
     value: totalCount.value,
@@ -424,7 +424,7 @@ const statsCards = computed(() => [
   },
   {
     key: 'completed',
-    icon: 'CircleCheck',
+    icon: CircleCheck,
     iconColor: '#67c23a',
     textColor: 'text-green-600',
     value: completedCount.value,
@@ -432,7 +432,7 @@ const statsCards = computed(() => [
   },
   {
     key: 'pending',
-    icon: 'Clock',
+    icon: Clock,
     iconColor: '#e6a23c',
     textColor: 'text-yellow-600',
     value: pendingCount.value,
@@ -440,7 +440,7 @@ const statsCards = computed(() => [
   },
   {
     key: 'displayed',
-    icon: 'Files',
+    icon: Files,
     iconColor: '#909399',
     textColor: 'text-gray-600',
     value: todos.value.length,
