@@ -140,75 +140,19 @@
 
         <!-- TODOリスト -->
         <div v-else class="space-y-4">
-          <div
+          <TodoItem
             v-for="todo in filteredTodos"
             :key="todo.id"
-            class="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors duration-200"
-            :class="{
-              'bg-gray-50 opacity-75': todo.completed,
-              'bg-white': !todo.completed
-            }"
-          >
-            <div class="flex items-start justify-between">
-              <div class="flex-1">
-                <div class="flex items-center space-x-3 mb-2">
-                  <el-checkbox
-                    :model-value="todo.completed"
-                    size="large"
-                    @change="toggleTodoStatus(todo)"
-                  />
-
-                  <h3
-                    class="text-lg font-medium"
-                    :class="{
-                      'line-through text-gray-500': todo.completed,
-                      'text-gray-900': !todo.completed
-                    }"
-                  >
-                    {{ todo.title }}
-                  </h3>
-                </div>
-
-                <p
-                  v-if="todo.description && !isMobile"
-                  class="text-gray-600 ml-8 mb-3 leading-relaxed"
-                  :class="{ 'line-through': todo.completed }"
-                >
-                  {{ todo.description }}
-                </p>
-
-                <div class="flex items-center justify-between ml-8">
-                  <div class="flex items-center space-x-4">
-                    <el-tag
-                      :type="todo.completed ? 'success' : 'warning'"
-                      size="small"
-                      effect="light"
-                    >
-                      <el-icon class="mr-1">
-                        <CircleCheck v-if="todo.completed" />
-                        <Clock v-else />
-                      </el-icon>
-                      {{ todo.completed ? '完了' : '未完了' }}
-                    </el-tag>
-
-                    <span class="text-xs text-gray-400" v-show="!isMobile">ID: {{ todo.id }}</span>
-                  </div>
-
-                  <div class="flex items-center space-x-2">
-                    <el-button size="small" type="primary" text @click="editTodo(todo)">
-                      <el-icon><Edit /></el-icon>
-                      編集
-                    </el-button>
-
-                    <el-button size="small" type="danger" text @click="deleteTodo(todo)">
-                      <el-icon><Delete /></el-icon>
-                      削除
-                    </el-button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            :todo="todo"
+            :show-actions="true"
+            :allow-toggle="true"
+            :allow-edit="true"
+            :allow-delete="true"
+            :is-mobile="isMobile"
+            @toggle-status="toggleTodoStatus"
+            @edit="editTodo"
+            @delete="deleteTodo"
+          />
         </div>
       </el-card>
 
@@ -284,8 +228,6 @@ import {
   Files,
   List,
   Plus,
-  Edit,
-  Delete,
   Filter
 } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -572,28 +514,6 @@ watch(filters, () => {
 
 .el-card:hover {
   --el-card-border-color: #409eff;
-}
-
-/* チェックボックスのカスタマイズ */
-.el-checkbox {
-  --el-checkbox-checked-bg-color: #67c23a;
-  --el-checkbox-checked-border-color: #67c23a;
-}
-
-/* アニメーション効果 */
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.todo-item {
-  animation: slideInUp 0.4s ease-out;
 }
 
 /* モバイル用ページネーション */

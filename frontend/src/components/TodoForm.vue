@@ -100,63 +100,14 @@
         </div>
       </template>
 
-      <div :class="isMobile ? 'border border-gray-200 rounded-lg p-3 bg-white' : 'border border-gray-200 rounded-lg p-4 bg-white'">
-        <div class="flex items-start justify-between">
-          <div class="flex-1">
-            <div :class="isMobile ? 'flex items-center space-x-2 mb-2' : 'flex items-center space-x-3 mb-2'">
-              <el-checkbox
-                :model-value="formData.completed"
-                :size="isMobile ? 'default' : 'large'"
-                disabled
-              />
-
-              <h3
-                :class="[
-                  isMobile ? 'text-base' : 'text-lg',
-                  'font-medium',
-                  {
-                    'line-through text-gray-500': formData.completed,
-                    'text-gray-900': !formData.completed
-                  }
-                ]"
-              >
-                {{ formData.title }}
-              </h3>
-            </div>
-
-            <p
-              v-if="formData.description && (!isMobile || formData.description.length < 100)"
-              :class="[
-                isMobile ? 'text-sm ml-6 mb-2' : 'text-gray-600 ml-8 mb-3',
-                'text-gray-600 leading-relaxed',
-                { 'line-through': formData.completed }
-              ]"
-            >
-              {{ isMobile && formData.description.length > 100 
-                ? formData.description.substring(0, 100) + '...' 
-                : formData.description }}
-            </p>
-
-            <div :class="isMobile ? 'flex items-center space-x-2 ml-6' : 'flex items-center space-x-4 ml-8'">
-              <el-tag
-                :type="formData.completed ? 'success' : 'warning'"
-                :size="isMobile ? 'small' : 'small'"
-                effect="light"
-              >
-                <el-icon class="mr-1">
-                  <CircleCheck v-if="formData.completed" />
-                  <Clock v-else />
-                </el-icon>
-                {{ formData.completed ? '完了' : '未完了' }}
-              </el-tag>
-              
-              <span v-if="isEdit && todoId && !isMobile" class="text-xs text-gray-400">
-                ID: {{ todoId }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <TodoItem
+        :todo="previewTodo"
+        :show-actions="false"
+        :allow-toggle="false"
+        :allow-edit="false"
+        :allow-delete="false"
+        :is-mobile="isMobile"
+      />
     </el-card>
   </div>
 </template>
@@ -166,17 +117,26 @@ import { ref, reactive, watch, onMounted, computed } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import {
   EditPen,
-  Clock,
-  CircleCheck,
   Check,
   Close,
   View
 } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+import TodoItem from './TodoItem.vue'
 
 // モバイル判定
 const windowWidth = ref(0)
 const isMobile = computed(() => windowWidth.value < 768)
+
+// プレビュー用のTODOオブジェクト
+const previewTodo = computed(() => ({
+  id: props.todoId || 0,
+  title: formData.title,
+  description: formData.description || undefined,
+  completed: formData.completed,
+  created_at: undefined,
+  updated_at: undefined
+}))
 
 // 型定義
 interface TodoFormData {
