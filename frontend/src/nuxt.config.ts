@@ -31,7 +31,7 @@ export default defineNuxtConfig({
   // ランタイム設定
   runtimeConfig: {
     // プライベートキー（サーバーサイドでのみ利用可能）
-    apiBaseUrl: 'http://backend:3000',
+    apiBaseUrl: process.env.NUXT_API_BASE_URL || 'http://backend:3000',
 
     // パブリックキー（クライアントサイドでも利用可能）
     public: {
