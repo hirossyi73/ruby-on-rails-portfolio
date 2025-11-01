@@ -580,21 +580,21 @@ components:
           type: integer
           description: 総件数
           example: 100
-        next_page:
-          type: integer
-          nullable: true
-          description: 次のページ番号（存在しない場合はnull）
-          example: 2
-        prev_page:
-          type: integer
-          nullable: true
-          description: 前のページ番号（存在しない場合はnull）
-          example: null
+        has_next_page:
+          type: boolean
+          description: 次のページが存在するかどうか
+          example: true
+        has_prev_page:
+          type: boolean
+          description: 前のページが存在するかどうか
+          example: false
       required:
         - current_page
         - per_page
         - total_pages
         - total_count
+        - has_next_page
+        - has_prev_page
 
     TokenResponse:
       type: object

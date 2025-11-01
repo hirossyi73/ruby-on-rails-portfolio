@@ -1,5 +1,4 @@
 class Api::V1::TodosController < ApplicationController
-  #skip_before_action :doorkeeper_authorize!
   before_action :set_todo, only: [:show, :update, :destroy]
 
   # GET /api/v1/todos
