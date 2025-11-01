@@ -9,10 +9,10 @@ info:
     email: support@example.com
 
 servers:
-  - url: http://localhost:3000
-    description: Development server
-  - url: https://api.example.com
-    description: Production server
+  - url: http://backend:3000
+    description: ServerSide server
+  - url: http://localhost
+    description: Development Client Server
 
 tags:
   - name: Health
@@ -651,7 +651,7 @@ components:
             type: string
           example:
             - "Title can't be blank"
-            - "Title is too long (maximum is 100 characters)"
+            - 'Title is too long (maximum is 100 characters)'
 
     User:
       type: object
